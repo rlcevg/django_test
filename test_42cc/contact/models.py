@@ -16,10 +16,10 @@ class Contact(models.Model):
     CONTACT_TYPES = (('phone', 'Phone'),
                      ('email', 'E-Mail'),
                      ('icq',   'ICQ'))
-    contact_id = models.ForeignKey(Person)
+    person = models.ForeignKey(Person)
     contact = models.CharField(max_length=20)
     contact_type = models.CharField(max_length=10, choices=CONTACT_TYPES)
     contact_info = models.TextField()
 
     def __unicode__(self):
-        return self.contact
+        return "{0}: {1}".format(self.get_contact_type_display(), self.contact)
