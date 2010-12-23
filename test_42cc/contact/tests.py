@@ -1,5 +1,5 @@
 from django.test import TestCase
-from test_42cc.contact import models
+from contact import models
 
 
 class PersonContactTest(TestCase):
@@ -31,14 +31,14 @@ class PersonContactTest(TestCase):
         self.assertEqual(self.person.signin_date, '2010-12-07')
         self.assertNotNull(self.person.biography)
 
-     def test_c1(self):
+    def test_c1(self):
         self.assertEqual(unicode(self.c1), 'Phone: (097)979-797-22')
         self.assertEqual(self.c1.person.pk, self.person.pk)
         self.assertEqual(self.c1.contact_type, 'phone')
         self.assertEqual(self.c1.contact, '(097)979-797-22')
         self.assertEqual(self.c1.contact_info, 'home number')
 
-     def test_c2(self):
+    def test_c2(self):
         self.assertEqual(unicode(self.c2), 'E-Mail: rlcevg@gamal.com')
         self.assertEqual(self.c2.person.pk, self.person.pk)
         self.assertEqual(self.c2.contact_type, 'email')
