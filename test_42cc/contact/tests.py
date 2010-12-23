@@ -22,14 +22,13 @@ class PersonContactTest(TestCase):
             contact_info='')
 
     def test_person(self):
-        self.assertNotNull(models.Person.objects[0])
         self.assertEqual(self.person.firstname, 'Bob')
         self.assertNotEqual(self.person.lastname, 'Krasnoe')
         self.assertEqual(self.person.lastname, 'Solnyshko')
         self.assertEqual(unicode(self.person), 'Bob Solnyshko')
         self.assertEqual(self.person.birth_date, '2012-01-01')
         self.assertEqual(self.person.signin_date, '2010-12-07')
-        self.assertNotNull(self.person.biography)
+        self.assertNotEqual(self.person.biography, '')
 
     def test_c1(self):
         self.assertEqual(unicode(self.c1), 'Phone: (097)979-797-22')
