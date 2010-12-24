@@ -1,0 +1,75 @@
+[
+  {
+    "model": "contact.person",
+    "pk": 1,
+    "fields": {
+      "firstname": "John",
+      "lastname": "Lennon",
+      "biography": "Was born... lived... died",
+      "birth_date": "2002-02-02",
+      "signin_date": "2010-12-08"
+    }
+  },
+  {
+    "model": "contact.contact",
+    "pk": 1,
+    "fields": {
+      "person": 1,
+      "contact": "(030)503-478-5",
+      "contact_type": "phone",
+      "contact_info": "home number"
+    }
+  },
+  {
+    "model": "contact.contact",
+    "pk": 2,
+    "fields": {
+      "person": 1,
+      "contact": "(030)503-478-0",
+      "contact_type": "phone",
+      "contact_info": "lazy number"
+    }
+  },
+  {
+    "model": "contact.person",
+    "pk": 2,
+    "fields": {
+      "firstname": "Paul",
+      "lastname": "McCartney",
+      "biography": "Wasn't born... didn't live... die",
+      "birth_date": "2012-01-01",
+      "signin_date": "2010-01-08"
+    }
+  },
+  {
+    "model": "contact.contact",
+    "pk": 3,
+    "fields": {
+      "person": 2,
+      "contact": "have@fun.com",
+      "contact_type": "email",
+      "contact_info": "autoresponder is active"
+    }
+  },
+  {
+    "model": "contact.contact",
+    "pk": 4,
+    "fields": {
+      "person": 2,
+      "contact": "503478099",
+      "contact_type": "icq"
+    }
+  },
+  {
+    "model": "contact.person",
+    "pk": 3,
+    "fields": {
+      "firstname": "Some",
+      "lastname": "Character",
+      "biography": "Wasn't born... didn't live... didn't die",
+      "birth_date": "1991-07-13",
+      "signin_date": "1995-05-08"
+    }
+  }
+]
+

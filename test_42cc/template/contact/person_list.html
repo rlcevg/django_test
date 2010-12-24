@@ -4,11 +4,11 @@
         <li>
             <h2>{{ person }}</h2>
             <p>{{ person.biography }}</p>
-            <h3>Contacts:<h3>
+            <h4>Contacts:</h4>
             <ul>
                 {% for contact in person.contact_set.all %}
                     <li>{{ contact.get_contact_type_display }}: {{ contact.contact }}
-                        {% if contact.contact_info %}<br>Additional info: {{ contact.contact_info }}{% endif %}</li>
+                        {% if contact.contact_info %}<br>Additional info:<br>{{ contact.contact_info }}{% endif %}</li>
                 {% endfor %}
             </ul>
         </li>
