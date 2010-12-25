@@ -5,8 +5,8 @@
     "fields": {
       "firstname": "John",
       "lastname": "Lennon",
-      "biography": "Was born... lived... died",
-      "birth_date": "2002-02-02",
+      "biography": "Born and raised in Liverpool, Lennon became involved as a teenager in the skiffle craze; his first band, The Quarrymen, evolved into The Beatles in 1960. As the group disintegrated towards the end of the decade, Lennon embarked on a solo career that produced the critically acclaimed albums John Lennon/Plastic Ono Band and Imagine, and iconic songs such as 'Give Peace a Chance' and 'Imagine'. Lennon disengaged himself from the music business in 1975 to devote time to his family, but re-emerged in 1980 with a new album, Double Fantasy. He was murdered three weeks after its release.",
+      "birth_date": "1940-10-09",
       "signin_date": "2010-12-08"
     }
   },
@@ -27,7 +27,7 @@
       "person": 1,
       "contact": "(030)503-478-0",
       "contact_type": "phone",
-      "contact_info": "lazy number"
+      "contact_info": "lazy number, is not working anymore"
     }
   },
   {
@@ -36,8 +36,8 @@
     "fields": {
       "firstname": "Paul",
       "lastname": "McCartney",
-      "biography": "Wasn't born... didn't live... die",
-      "birth_date": "2012-01-01",
+      "biography": "McCartney gained worldwide fame as a member of The Beatles, alongside John Lennon, George Harrison, and Ringo Starr. McCartney and Lennon formed one of the most influential and successful songwriting partnerships and wrote some of the most popular songs in the history of rock music. After leaving The Beatles, McCartney launched a successful solo career and formed the band Wings with his first wife, Linda Eastman, and singer-songwriter Denny Laine. McCartney is listed in Guinness World Records as the 'most successful musician and composer in popular music history', with 60 gold discs and sales of 100 million singles in the UK.",
+      "birth_date": "1942-06-18",
       "signin_date": "2010-01-08"
     }
   },

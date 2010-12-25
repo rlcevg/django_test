@@ -43,3 +43,9 @@ class PersonContactTest(TestCase):
         self.assertEqual(self.c2.contact_type, 'email')
         self.assertEqual(self.c2.contact, 'rlcevg@gamal.com')
         self.assertEqual(self.c2.contact_info, '')
+
+class ViewTest(TestCase):
+    def test_view(self):
+        response = self.client.get('/')
+        self.failUnlessEqual(response.status_code, 200)
+
