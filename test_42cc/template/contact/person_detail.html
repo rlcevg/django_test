@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}About page{% endblock %}
+
+{% block content %}
+    <h1 style="text-align: center;">All about "me"</h1>
+    {% if object %}
+        <h2>{{ object }}</h2>
+        <p><b>Birthdate:</b> {{ object.birth_date }}</p>
+        <p><b>Biography:</b><br>{{ object.biography }}</p>
+        <h4>Contacts:</h4>
+        <ul>
+            {% for contact in object.contact_set.all %}
+                <li>{{ contact.get_contact_type_display }}: {{ contact.contact }}
+                    {% if contact.contact_info %}
+                        <br>Info: {{ contact.contact_info }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No person entries found.</p>
+    {% endif %}
+{% endblock %}
