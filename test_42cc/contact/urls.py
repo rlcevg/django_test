@@ -6,7 +6,12 @@ person_info = {
     'object_id': 1,
 }
 
+req_info = {
+    'template_name': 'contact/requests.html',
+    'queryset': HttpRequestLog.objects.order_by('-datetime')[:10],
+}
+
 urlpatterns = patterns('',
     (r'^$', 'django.views.generic.list_detail.object_detail', person_info),
-    (r'^requests/$', 'contact.views.process_requests'),
+    (r'^requests/$', 'django.views.generic.list_detail.object_list', req_info),
 )
