@@ -48,4 +48,12 @@ class ViewTest(TestCase):
     def test_view(self):
         response = self.client.get('/')
         self.failUnlessEqual(response.status_code, 200)
+        
+class HttpRequestLogTest(TestCase):
+    def test_request(self):
+        response = self.client.get('/')
+        requestLog = models.HttpRequestLog.objects.all()
+        print requestLog.host, requestLog.full_path
+        self.assertNotEqual(requestLog.host, '')
+        self.failUnlessEqual(response.status_code, 200)
 
