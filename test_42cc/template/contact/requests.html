@@ -4,9 +4,28 @@
 
 {% block content %}
     {% if object_list %}
-        {% for request in object_list %}
-            <br>{{ request }}
-        {% endfor %}
+        <table border="1">
+            <tr>
+                <th>#</th>
+                <th>Host</th>
+                <th>Path</th>
+                <th>Time</th>
+                <th>Method</th>
+                <th>Is Ajax</th>
+                <th>Is Secure</th>
+            </tr>
+            {% for request in object_list %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ request.host }}</td>
+                    <td>{{ request.full_path }}</td>
+                    <td>{{ request.datetime }}</td>
+                    <td>{{ request.method }}</td>
+                    <td>{{ request.is_ajax }}</td>
+                    <td>{{ request.is_secure }}</td>
+                </tr>
+            {% endfor %}
+        </table>
     {% else %}
         <p>No request entries found.</p>
     {% endif %}
