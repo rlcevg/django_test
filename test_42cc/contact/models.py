@@ -1,5 +1,4 @@
 from django.db import models
-#import datetime
 
 class Person(models.Model):
     firstname = models.CharField(max_length=80)
@@ -30,6 +29,7 @@ class HttpRequestLog(models.Model):
     full_path = models.TextField()
     is_ajax = models.BooleanField()
     is_secure = models.BooleanField()
+    method = models.CharField(max_length=4)
     datetime = models.DateTimeField()
     
     def __unicode__(self):

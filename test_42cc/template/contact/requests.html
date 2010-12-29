@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Requests info page{% endblock %}
+
+{% block content %}
+    {% if object_list %}
+        {% for request in object_list %}
+            <br>{{ request }}
+        {% endfor %}
+    {% else %}
+        <p>No request entries found.</p>
+    {% endif %}
+    <p><a href="/">Back to biography</a></p>
+{% endblock %}

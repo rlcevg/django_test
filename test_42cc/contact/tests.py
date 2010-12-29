@@ -54,5 +54,6 @@ class HttpRequestLogTest(TestCase):
         response = self.client.get('/')
         requestLog = models.HttpRequestLog.objects.get()
         self.assertNotEqual(requestLog.host, '')
+        self.assertEqual(requestLog.method, 'GET')
         self.failUnlessEqual(response.status_code, 200)
 
