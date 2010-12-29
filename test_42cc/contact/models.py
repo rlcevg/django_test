@@ -30,7 +30,7 @@ class HttpRequestLog(models.Model):
     full_path = models.TextField()
     is_ajax = models.BooleanField()
     is_secure = models.BooleanField()
-    time = models.DateTimeField()
+    datetime = models.DateTimeField()
     
     def __unicode__(self):
         return self.host + " " + self.full_path

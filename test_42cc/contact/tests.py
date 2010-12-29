@@ -53,7 +53,6 @@ class HttpRequestLogTest(TestCase):
     def test_request(self):
         response = self.client.get('/')
         requestLog = models.HttpRequestLog.objects.get()
-        print requestLog.host, requestLog.full_path
         self.assertNotEqual(requestLog.host, '')
         self.failUnlessEqual(response.status_code, 200)
 
