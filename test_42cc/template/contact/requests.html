@@ -3,8 +3,8 @@
 {% block title %}Requests info page{% endblock %}
 
 {% block content %}
-    {% if object_list %}
-        {% for request in object_list %}
+    {% if request_list %}
+        {% for request in request_list %}
             <br>{{ request }}
         {% endfor %}
     {% else %}

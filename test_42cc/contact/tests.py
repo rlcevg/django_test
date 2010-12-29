@@ -48,6 +48,8 @@ class ViewTest(TestCase):
     def test_view(self):
         response = self.client.get('/')
         self.failUnlessEqual(response.status_code, 200)
+        response = self.client.get('/requests/')
+        self.failUnlessEqual(response.status_code, 200)
         
 class HttpRequestLogTest(TestCase):
     def test_request(self):
