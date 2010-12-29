@@ -23,3 +23,14 @@ class Contact(models.Model):
 
     def __unicode__(self):
         return "{0}: {1}".format(self.get_contact_type_display(), self.contact)
+        
+        
+class HttpRequestLog(models.Model):
+    host = models.CharField(max_length=80)
+    full_path = models.TextField()
+    is_ajax = models.BooleanField()
+    is_secure = models.BooleanField()
+    time = models.DateTimeField()
+    
+    def __unicode__(self):
+        return self.host + " " + self.full_path
