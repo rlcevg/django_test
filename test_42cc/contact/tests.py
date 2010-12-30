@@ -44,6 +44,7 @@ class PersonContactTest(TestCase):
         self.assertEqual(self.c2.contact, 'rlcevg@gamal.com')
         self.assertEqual(self.c2.contact_info, '')
 
+
 class ViewTest(TestCase):
     def test_view(self):
         response = self.client.get('/')
@@ -51,11 +52,44 @@ class ViewTest(TestCase):
         response = self.client.get('/requests/')
         self.failUnlessEqual(response.status_code, 200)
         
+        
 class HttpRequestLogTest(TestCase):
     def test_request(self):
         response = self.client.get('/')
+        self.failUnlessEqual(response.status_code, 200)
         requestLog = models.HttpRequestLog.objects.get()
         self.assertNotEqual(requestLog.host, '')
+        self.assertEqual(requestLog.full_path, '/')
         self.assertEqual(requestLog.method, 'GET')
+        response = self.client.get('/requests/')
         self.failUnlessEqual(response.status_code, 200)
+        requestLog = models.HttpRequestLog.objects.all()[1]
+        self.assertEqual(requestLog.full_path, '/requests/')
+        self.assertEqual(requestLog.method, 'GET')
+
+
+class ContextProcessorTest(TestCase):
+    def test_context_processor(self):
+        response = self.client.get('/requests/')
+        self.assertEqual(response.context['DEBUG'], True)
+        self.assertEqual(response.context['DATABASES'], {'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': 'contact.db',
+                'USER': '',
+                'PASSWORD': '',
+                'HOST': '',
+                'PORT': ''}})
+        self.assertEqual(response.context['TIME_ZONE'], 'America/Chicago')
+        self.assertEqual(response.context['LANGUAGE_CODE'], 'en-us')
+        self.assertEqual(response.context['SITE_ID'], 1)
+        self.assertEqual(response.context['USE_I18N'], True)
+        self.assertEqual(response.context['USE_L10N'], True)
+        self.assertEqual(response.context['MEDIA_ROOT'], '')
+        self.assertEqual(response.context['MEDIA_URL'], '')
+        self.assertEqual(response.context['ADMIN_MEDIA_PREFIX'], '/media/')
+        self.assertNotEqual(response.context['SECRET_KEY'], 'lol')
+        self.assertEqual(response.context['TEMPLATE_LOADERS'], (
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader'))
+        self.assertEqual(response.context['ROOT_URLCONF'], 'test_42cc.urls')
 
