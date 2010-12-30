@@ -72,7 +72,6 @@ class HttpRequestLogTest(TestCase):
 class ContextProcessorTest(TestCase):
     def test_context_processor(self):
         response = self.client.get('/requests/')
-        print response.context
         self.assertEqual(response.context['DEBUG'], settings.DEBUG)
         self.assertEqual(response.context['DATABASES'], settings.DATABASES)
         self.assertEqual(response.context['TIME_ZONE'], settings.TIME_ZONE)
