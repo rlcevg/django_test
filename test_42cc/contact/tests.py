@@ -1,5 +1,6 @@
 from django.test import TestCase
 from contact import models
+from django.conf import settings
 
 
 class PersonContactTest(TestCase):
@@ -71,25 +72,17 @@ class HttpRequestLogTest(TestCase):
 class ContextProcessorTest(TestCase):
     def test_context_processor(self):
         response = self.client.get('/requests/')
-        self.assertEqual(response.context['DEBUG'], True)
-        self.assertEqual(response.context['DATABASES'], {'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': 'contact.db',
-                'USER': '',
-                'PASSWORD': '',
-                'HOST': '',
-                'PORT': ''}})
-        self.assertEqual(response.context['TIME_ZONE'], 'America/Chicago')
-        self.assertEqual(response.context['LANGUAGE_CODE'], 'en-us')
-        self.assertEqual(response.context['SITE_ID'], 1)
-        self.assertEqual(response.context['USE_I18N'], True)
-        self.assertEqual(response.context['USE_L10N'], True)
-        self.assertEqual(response.context['MEDIA_ROOT'], '')
-        self.assertEqual(response.context['MEDIA_URL'], '')
-        self.assertEqual(response.context['ADMIN_MEDIA_PREFIX'], '/media/')
-        self.assertNotEqual(response.context['SECRET_KEY'], 'lol')
-        self.assertEqual(response.context['TEMPLATE_LOADERS'], (
-                'django.template.loaders.filesystem.Loader',
-                'django.template.loaders.app_directories.Loader'))
-        self.assertEqual(response.context['ROOT_URLCONF'], 'test_42cc.urls')
+        print response.context
+        self.assertEqual(response.context['DEBUG'], settings.DEBUG)
+        self.assertEqual(response.context['DATABASES'], settings.DATABASES)
+        self.assertEqual(response.context['TIME_ZONE'], settings.TIME_ZONE)
+        self.assertEqual(response.context['LANGUAGE_CODE'], settings.LANGUAGE_CODE)
+        self.assertEqual(response.context['SITE_ID'], settings.SITE_ID)
+        self.assertEqual(response.context['USE_I18N'], settings.USE_I18N)
+        self.assertEqual(response.context['USE_L10N'], settings.USE_L10N)
+        self.assertEqual(response.context['MEDIA_ROOT'], settings.MEDIA_ROOT)
+        self.assertEqual(response.context['MEDIA_URL'], settings.MEDIA_URL)
+        self.assertEqual(response.context['ADMIN_MEDIA_PREFIX'], settings.ADMIN_MEDIA_PREFIX)
+        self.assertEqual(response.context['TEMPLATE_LOADERS'], settings.TEMPLATE_LOADERS)
+        self.assertEqual(response.context['ROOT_URLCONF'], settings.ROOT_URLCONF)
 
