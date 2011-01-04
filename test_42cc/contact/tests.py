@@ -44,13 +44,15 @@ class PersonContactTest(TestCase):
         self.assertEqual(self.c2.contact, 'rlcevg@gamal.com')
         self.assertEqual(self.c2.contact_info, '')
 
+
 class ViewTest(TestCase):
     def test_view(self):
         response = self.client.get('/')
         self.failUnlessEqual(response.status_code, 200)
         response = self.client.get('/requests/')
         self.failUnlessEqual(response.status_code, 200)
-        
+
+
 class HttpRequestLogTest(TestCase):
     def test_request(self):
         response = self.client.get('/')
@@ -58,4 +60,3 @@ class HttpRequestLogTest(TestCase):
         self.assertNotEqual(requestLog.host, '')
         self.assertEqual(requestLog.method, 'GET')
         self.failUnlessEqual(response.status_code, 200)
-

@@ -1,6 +1,7 @@
 from contact.models import HttpRequestLog
 from datetime import datetime
 
+
 class RequestLogMiddleware(object):
     def process_request(self, request):
         httpRequestLog = HttpRequestLog()
@@ -11,4 +12,3 @@ class RequestLogMiddleware(object):
         httpRequestLog.is_secure = request.is_secure()
         httpRequestLog.method = request.method
         httpRequestLog.save()
-
