@@ -72,19 +72,8 @@ class HttpRequestLogTest(TestCase):
 class ContextProcessorTest(TestCase):
     def test_context_processor(self):
         response = self.client.get('/requests/')
-        self.assertEqual(response.context['DEBUG'], settings.DEBUG)
-        self.assertEqual(response.context['DATABASES'], settings.DATABASES)
-        self.assertEqual(response.context['TIME_ZONE'], settings.TIME_ZONE)
-        self.assertEqual(response.context['LANGUAGE_CODE'],
-                settings.LANGUAGE_CODE)
-        self.assertEqual(response.context['SITE_ID'], settings.SITE_ID)
-        self.assertEqual(response.context['USE_I18N'], settings.USE_I18N)
-        self.assertEqual(response.context['USE_L10N'], settings.USE_L10N)
-        self.assertEqual(response.context['MEDIA_ROOT'], settings.MEDIA_ROOT)
-        self.assertEqual(response.context['MEDIA_URL'], settings.MEDIA_URL)
-        self.assertEqual(response.context['ADMIN_MEDIA_PREFIX'],
-                settings.ADMIN_MEDIA_PREFIX)
-        self.assertEqual(response.context['TEMPLATE_LOADERS'],
-                settings.TEMPLATE_LOADERS)
-        self.assertEqual(response.context['ROOT_URLCONF'],
+        self.assertEqual(response.context['settings'], settings)
+        self.assertEqual(response.context['settings'].DEBUG,
+                settings.DEBUG)
+        self.assertEqual(response.context['settings'].ROOT_URLCONF,
                 settings.ROOT_URLCONF)
