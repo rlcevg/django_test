@@ -14,5 +14,5 @@ req_info = {
 urlpatterns = patterns('',
     (r'^$', 'django.views.generic.list_detail.object_detail', person_info),
     (r'^requests/$', 'django.views.generic.list_detail.object_list', req_info),
-    (r'^edit/$', 'contact.views.edit', person_info),
+    (r'^edit/$', 'contact.views.edit', person_info, 'home'),
 )

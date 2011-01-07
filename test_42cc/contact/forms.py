@@ -8,4 +8,4 @@ class PersonForm(ModelForm):
         model = Person
         exclude = ('signin_date')
 
-AboutFormSet = inlineformset_factory(Person, Contact)
+ContactFormSet = inlineformset_factory(Person, Contact)
