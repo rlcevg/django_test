@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 
 
-#@login_required
+@login_required
 def edit(request, queryset, object_id):
     person = get_object_or_404(queryset, pk=object_id)
 
