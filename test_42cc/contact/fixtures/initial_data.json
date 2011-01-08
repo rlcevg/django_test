@@ -70,6 +70,19 @@
       "birth_date": "1991-07-13",
       "signin_date": "1995-05-08"
     }
+  },
+  {
+    "model": "auth.User",
+    "pk": 1,
+    "fields": {
+      "username": "login",
+      "email": "rlcevg@gamal.com",
+      "password": "sha1$353b7$0600a689328fce5fa8c95c965ec723535633f1c2",
+      "is_staff": 0,
+      "is_active": 1,
+      "is_superuser": 0,
+      "last_login": "2011-01-08 10:20:58.342017",
+      "date_joined": "2011-01-08 10:20:58.342017"
+    }
   }
 ]
-

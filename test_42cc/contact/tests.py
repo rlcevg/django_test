@@ -67,6 +67,8 @@ class HttpRequestLogTest(TestCase):
         requestLog = models.HttpRequestLog.objects.all()[1]
         self.assertEqual(requestLog.full_path, '/requests/')
         self.assertEqual(requestLog.method, 'GET')
+        self.assertTemplateUsed(response, "contact/requests.html")
+        self.assertTemplateUsed(response, 'base.html')
 
 
 class ContextProcessorTest(TestCase):
@@ -77,3 +79,35 @@ class ContextProcessorTest(TestCase):
                 settings.DEBUG)
         self.assertEqual(response.context['settings'].ROOT_URLCONF,
                 settings.ROOT_URLCONF)
+
+
+class FormsTest(TestCase):
+    def test_valid_form(self):
+        "POST valid data to a form"
+        post_data = {
+            'biography': 'Hello World',
+            'firstname': 'firstname',
+            'lastname': 'lastname',
+            'a': '------------',
+            'button_logout': '',
+        }
+        response = self.client.post('/edit/', post_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/accounts/login/?next=/edit/')
+
+
+class AuthTest(TestCase):
+    fixtures = ['initial_data.json']
+
+    def test_view_with_login(self):
+        # Get the page without logging in. Should result in 302.
+        response = self.client.get('/edit/')
+        self.assertRedirects(response, '/accounts/login/?next=/edit/')
+
+        # Log in
+        login = self.client.login(username='login', password='password')
+        self.failUnless(login, 'Could not log in')
+
+        # Request a page that requires a login
+        response = self.client.get('/edit/')
+        self.assertEqual(response.status_code, 200)
