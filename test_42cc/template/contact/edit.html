@@ -1,18 +1,25 @@
 {% extends "base.html" %}
 
+{% block title %}About page - edit{% endblock %}
+
 {% block content %}
+<h1 style="text-align: center;">Edit user info</h1>
 <form method="post" action="">
     {% csrf_token %}
     <table border=5>
         {{ form }}
     </table>
-    <table border=1>
+    <br>
         {{ formset.management_form }}
-        {{ formset }}
-    </table>
+        {% for form_c in formset.forms %}
+            <p><table border=1>
+                {{ form_c }}
+            </table></p>
+        {% endfor %}
     <p>
         <input type="submit" value="Apply" />
-        <input type="button" value="Cancel" />
+        <input type="reset" value="Reset" />
+        <input type="button" value="Cancel" onclick="location.href='/'" />
     </p>
 </form>
 {% endblock %}

@@ -8,6 +8,7 @@ from django.core import urlresolvers
 #@login_required
 def edit(request, queryset, object_id):
     person = get_object_or_404(queryset, pk=object_id)
+
     if request.method == "POST":
         form = PersonForm(request.POST, request.FILES,
                 instance=person)
@@ -17,10 +18,11 @@ def edit(request, queryset, object_id):
             form.save()
         if formset.is_valid():
             formset.save()
-            return HttpResponseRedirect(urlresolvers.reverse('home'))
+        return HttpResponseRedirect(urlresolvers.reverse("home"))
     else:
         form = PersonForm(instance=person)
         formset = ContactFormSet(instance=person)
+
     return render_to_response("contact/edit.html", {
                 "form": form,
                 "formset": formset,
