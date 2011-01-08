@@ -3,9 +3,10 @@ from django.template import RequestContext
 from contact.forms import PersonForm, ContactFormSet
 from django.http import HttpResponseRedirect
 from django.core import urlresolvers
+from django.contrib.auth.decorators import login_required
 
 
-#@login_required
+@login_required
 def edit(request, queryset, object_id):
     person = get_object_or_404(queryset, pk=object_id)
 
