@@ -17,5 +17,5 @@ urlpatterns = patterns('',
     (r'^requests/$', 'django.views.generic.list_detail.object_list', req_info),
     (r'^edit/$', 'contact.views.edit', person_info),
     (r'^accounts/login/$', 'django.contrib.auth.views.login',
-        {'template_name': 'contact/login.html'})
+        {'template_name': 'contact/login.html'}),
 )

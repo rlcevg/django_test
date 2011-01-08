@@ -17,9 +17,14 @@
             </table></p>
         {% endfor %}
     <p>
-        <input type="submit" value="Apply" />
+        <input type="submit" name="button_apply" value="Apply" />
         <input type="reset" value="Reset" />
         <input type="button" value="Cancel" onclick="location.href='/'" />
     </p>
+</form>
+
+<form method="post" action="">
+    {% csrf_token %}
+    <p><input type="submit" name="button_logout" value="logout" /></p>
 </form>
 {% endblock %}
