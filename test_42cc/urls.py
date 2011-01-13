@@ -8,7 +8,8 @@ import os
 
 urlpatterns = patterns('',
     (r'^', include('contact.urls')),
-    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
+    (r'^' + settings.SITE_MEDIA_PREFIX[1:] + '(?P<path>.*)$',
+            'django.views.static.serve',
             {'document_root': os.path.join(settings.CURRENT_PATH, 'media')}),
     # Example:
     # (r'^test_42cc/', include('test_42cc.foo.urls')),

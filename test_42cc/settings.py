@@ -60,6 +60,7 @@ MEDIA_URL = ''
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/media/'
+SITE_MEDIA_PREFIX = '/site_media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'v(sutjo+x&a7zfh!=32n#ptmt@u0-dl=r!*fd$8^o6jh$e&ia('
