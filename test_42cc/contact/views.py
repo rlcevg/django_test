@@ -14,35 +14,41 @@ def edit(request, queryset, object_id):
     response_dict = {}
 
     if request.method == "POST":
-        form = PersonForm(request.POST, request.FILES,
-                instance=person)
-        formset = ContactFormSet(request.POST, request.FILES,
-                instance=person)
-        errors = {}
+        if 'button_apply' in request.POST:
+            form = PersonForm(request.POST, request.FILES,
+                    instance=person)
+            formset = ContactFormSet(request.POST, request.FILES,
+                    instance=person)
+            errors = {}
 
-        if form.is_valid():
-            form.save()
-        else:
-            errors.update([(key, unicode(value[0]))
-                for key, value in form.errors.items()])
+            if form.is_valid():
+                form.save()
+            else:
+                errors.update([(key, unicode(value[0]))
+                    for key, value in form.errors.items()])
 
-        if formset.is_valid():
-            formset.save()
-        else:
-            errors.update([(key, unicode(value[0]))
-                for key, value in formset.errors.items()])
+            if formset.is_valid():
+                formset.save()
+            else:
+                errors.update([(key, unicode(value[0]))
+                    for key, value in formset.errors.items()])
 
-        if len(errors) > 0:
-            response_dict['type'] = 'error'
-            response_dict['msg'] = 'Fix errors and submit again'
-            response_dict['errors'] = errors
-        else:
-            response_dict['type'] = 'success'
-            response_dict['msg'] = 'Thank you-u-u'
+            if len(errors) > 0:
+                response_dict['type'] = 'error'
+                response_dict['msg'] = 'Fix errors and submit again'
+                response_dict['errors'] = errors
+            else:
+                response_dict['type'] = 'success'
+                response_dict['msg'] = 'Thank you-u-u'
 
-        if request.is_ajax():
-            json = simplejson.dumps(response_dict, ensure_ascii=False)
-            return HttpResponse(json, mimetype='application/javascript')
+            if request.is_ajax():
+                json = simplejson.dumps(response_dict, ensure_ascii=False)
+                return HttpResponse(json, mimetype='application/javascript')
+
+        elif 'button_reverse' in request.POST:
+            form = PersonForm(instance=person)
+            formset = ContactFormSet(instance=person)
+            form.is_reversed = not form.is_reversed
 
     else:
         form = PersonForm(instance=person)

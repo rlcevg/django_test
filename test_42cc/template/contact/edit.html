@@ -43,4 +43,7 @@
 <form method="get" action="{% url logout_url %}">
     <p><input type="submit" name="button_logout" value="logout" /></p>
 </form>
+<form method="post" action="">{% csrf_token %}
+    <p><input type="submit" name="button_reverse" value="reverse fields" /></p>
+</form>
 {% endblock %}
