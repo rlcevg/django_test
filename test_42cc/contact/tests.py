@@ -1,6 +1,10 @@
 from django.test import TestCase
 from contact import models
 from django.conf import settings
+from contact.widgets import CalendarWidget
+from django import forms
+from datetime import date
+from django.test import Client
 
 
 class PersonContactTest(TestCase):
@@ -111,3 +115,98 @@ class AuthTest(TestCase):
         # Request a page that requires a login
         response = self.client.get('/edit/')
         self.assertEqual(response.status_code, 200)
+
+
+class CalendarWidgetTest(TestCase):
+    def test_dateField_with_inputformat(self):
+        "DateFields with manually specified input formats"
+        f = forms.DateField(input_formats=["%d.%m.%Y", "%d-%m-%Y"],
+                widget=CalendarWidget)
+        # Parse a date in an unaccepted format; get an error
+        self.assertRaises(forms.ValidationError, f.clean, '2010-12-21')
+
+        # Parse a date in a valid format, get a parsed result
+        result = f.clean('21.12.2010')
+        self.assertEqual(result, date(2010, 12, 21))
+
+        # Check that the parsed result does a round trip to the same format
+        text = f.widget._format_value(result)
+        self.assertEqual(text, "2010-12-21")
+
+        # Parse a date in a valid format, get a parsed result
+        result = f.clean('21-12-2010')
+        self.assertEqual(result, date(2010, 12, 21))
+
+        # Check that the parsed result does a round trip to default format
+        text = f.widget._format_value(result)
+        self.assertEqual(text, "2010-12-21")
+
+        self.assertRaises(forms.ValidationError, f.clean, '2010/12/21')
+
+        class GetDate(forms.Form):
+            mydate = forms.DateField(widget=CalendarWidget)
+
+        a = GetDate({'mydate': '2008/4/1'})
+        self.assertFalse(a.is_valid())
+
+        a = GetDate({'mydate': '2008-4-1'})
+        self.assertTrue(a.is_valid())
+        self.assertEqual(a.cleaned_data['mydate'], date(2008, 4, 1))
+        self.assertEqual(a['mydate'].as_hidden(), '<input type="hidden" \
+name="mydate" value="2008-4-1" id="id_mydate" />')
+
+    def test_calendarWidget(self):
+        w = CalendarWidget()
+        self.assertEqual(w.render('mydate', '1940-10-09'),
+            """<input value="1940-10-09" type="text" class="vDateField" \
+name="mydate" size="10" />""")
+
+    def test_calendarWidget_img(self):
+        img = settings.SITE_MEDIA_PREFIX + 'img/icon_calendar.gif'
+        w = CalendarWidget(attrs={
+            'img': img,
+        })
+        self.assertEqual(w.render('mydate', '1940-10-09'),
+            """<img class="calendar" src="{0}" alt="Calendar">\
+<input value="1940-10-09" type="text" class="vDateField" \
+name="mydate" size="10" />""".format(img))
+
+
+class AJAX_SubmitTest(TestCase):
+    def test_ajax_submit(self):
+        c = Client()
+        c.login(username='login', password='password')
+
+        # Extra parameters to make this a Ajax style request.
+        kwargs = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+
+        # A valid data
+        post_data = {
+            'contact_set-TOTAL_FORMS': 0,
+            'contact_set-INITIAL_FORMS': 0,
+            'contact_set-MAX_NUM_FORMS': 0,
+            'biography': 'Hello World',
+            'firstname': 'firstname',
+            'lastname': 'lastname',
+            'birth_date': '1940-10-09',
+        }
+        response = c.post('/edit/', post_data, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('type' in response.content)
+        self.assertTrue('"type": "success"' in response.content)
+        self.assertFalse('errors' in response.content)
+
+        # A invalid data - birthday (date) doesn't exist
+        post_data = {
+            'contact_set-TOTAL_FORMS': 0,
+            'contact_set-INITIAL_FORMS': 0,
+            'contact_set-MAX_NUM_FORMS': 0,
+            'birth_date': '1940-10-0999',
+        }
+        response = c.post('/edit/', post_data, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('type' in response.content)
+        self.assertTrue('"type": "error"' in response.content)
+        self.assertTrue('errors' in response.content)
+        self.assertTrue('"birth_date": "Enter a valid date."' in
+                response.content)

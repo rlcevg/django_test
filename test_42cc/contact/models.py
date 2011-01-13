@@ -5,7 +5,7 @@ class Person(models.Model):
     firstname = models.CharField(max_length=80)
     lastname = models.CharField(max_length=80)
     biography = models.TextField()
-    birth_date = models.DateTimeField()
+    birth_date = models.DateField()
     signin_date = models.DateTimeField('date signed')
 
     def __unicode__(self):
@@ -18,7 +18,8 @@ class Contact(models.Model):
                      ('icq',   'ICQ'))
     person = models.ForeignKey(Person)
     contact = models.CharField(max_length=20)
-    contact_type = models.CharField(max_length=10, choices=CONTACT_TYPES)
+    contact_type = models.CharField(max_length=10, choices=CONTACT_TYPES,
+            default='email')
     contact_info = models.TextField()
 
     def __unicode__(self):
