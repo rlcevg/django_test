@@ -5,6 +5,7 @@ from contact.widgets import CalendarWidget
 from django import forms
 from datetime import date
 from django.test import Client
+from contact.forms import PersonForm
 
 
 class PersonContactTest(TestCase):
@@ -210,3 +211,18 @@ class AJAX_SubmitTest(TestCase):
         self.assertTrue('errors' in response.content)
         self.assertTrue('"birth_date": "Enter a valid date."' in
                 response.content)
+
+
+class ReversedFieldsTest(TestCase):
+    def test_order(self):
+        f = PersonForm()
+        self.assertFalse(f.is_reversed)
+        self.assertEqual(f.as_table(), """<tr><th><label for="id_firstname">Firstname:</label></th><td><input id="id_firstname" type="text" name="firstname" maxlength="80" /></td></tr>
+<tr><th><label for="id_lastname">Lastname:</label></th><td><input id="id_lastname" type="text" name="lastname" maxlength="80" /></td></tr>
+<tr><th><label for="id_biography">Biography:</label></th><td><textarea id="id_biography" rows="20" cols="80" name="biography"></textarea></td></tr>
+<tr><th><label for="id_birth_date">Birth date:</label></th><td><img class="calendar" src="/site_media/img/baloon_24.png" alt="Calendar"><input id="id_birth_date" type="text" class="vDateField" name="birth_date" size="10" /></td></tr>""")
+        f.is_reversed = True
+        self.assertEqual(f.as_table(), """<tr><th><label for="id_birth_date">Birth date:</label></th><td><img class="calendar" src="/site_media/img/baloon_24.png" alt="Calendar"><input id="id_birth_date" type="text" class="vDateField" name="birth_date" size="10" /></td></tr>
+<tr><th><label for="id_biography">Biography:</label></th><td><textarea id="id_biography" rows="20" cols="80" name="biography"></textarea></td></tr>
+<tr><th><label for="id_lastname">Lastname:</label></th><td><input id="id_lastname" type="text" name="lastname" maxlength="80" /></td></tr>
+<tr><th><label for="id_firstname">Firstname:</label></th><td><input id="id_firstname" type="text" name="firstname" maxlength="80" /></td></tr>""")
