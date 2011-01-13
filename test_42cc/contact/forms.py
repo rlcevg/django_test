@@ -3,12 +3,16 @@ from contact.models import Person, Contact
 from django.forms.models import inlineformset_factory
 from contact.widgets import CalendarWidget
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 
 class PersonForm(ModelForm):
+    is_reversed = False
+
     class Meta:
         model = Person
         exclude = ('signin_date')
+        #fields = ('birth_date', 'biography', 'lastname', 'firstname')
         widgets = {
             'biography': Textarea(attrs={'cols': 80, 'rows': 20}),
             'birth_date': CalendarWidget(attrs={
@@ -25,6 +29,14 @@ class PersonForm(ModelForm):
             settings.SITE_MEDIA_PREFIX + "js/jquery.form.js",
             settings.SITE_MEDIA_PREFIX + "js/ajax_person_form.js",
         )
+
+    def as_table(self):
+        output = super(PersonForm, self).as_table()
+        if self.is_reversed:
+            lines = output.split('\n')
+            lines.reverse()
+            output = mark_safe(u'\n'.join(lines))
+        return output
 
 
 class ContactForm(ModelForm):
