@@ -1,8 +1,9 @@
 <html lang="en">
 <head>
 {#{% comment %}#}
-    <link rel="stylesheet" href="/site_media/css/style.css" />
+    <link rel="stylesheet" href="{{ settings.SITE_MEDIA_PREFIX }}css/style.css" />
 {#{% endcomment %}#}
+    {% block extra_head %}{% endblock %}
     <title>{% block title %}{% endblock %}</title>
 </head>
 

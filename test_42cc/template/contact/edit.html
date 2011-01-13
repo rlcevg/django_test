@@ -1,30 +1,46 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+    {{ form.media }}
+{% endblock %}
+
 {% block title %}About page - edit{% endblock %}
+
 
 {% block content %}
 <h1 style="text-align: center;">Edit user info</h1>
-<form method="post" action="">
-    {% csrf_token %}
+<form method="post" action="" id="person_frm" name="person_frm">{% csrf_token %}
     <table border=5>
-        {{ form }}
+        {{ form.as_table }}
     </table>
-    <br>
-        {{ formset.management_form }}
-        {% for form_c in formset.forms %}
-            <p><table border=1>
-                {{ form_c }}
-            </table></p>
-        {% endfor %}
+    <p><table border=1>
+    <tr>
+        <th>#</th>
+        <th>Type</th>
+        <th>Contact</th>
+        <th>Info</th>
+        <th>Delete</th>
+    </tr>
+    {{ formset.management_form }}
+    {% for form_c in formset.forms %}
+        <tr>
+            <td>{{ form_c.id }}{{ forloop.counter }}</td>
+            <td>{{ form_c.contact_type }}</td>
+            <td>{{ form_c.contact }}</td>
+            <td>{{ form_c.contact_info }}</td>
+            <td>{{ form_c.DELETE }}</td>
+        </tr>
+    {% endfor %}
+    </table></p>
     <p>
-        <input type="submit" name="button_apply" value="Apply" />
-        <input type="reset" value="Reset" />
-        <input type="button" value="Cancel" onclick="location.href='/'" />
+        <div id="person_frm_msg"></div>
+        <input type="submit" class="bigbtn" name="button_apply" value="Apply" id="apply_btn" />
+        <input type="reset" class="bigbtn" value="Reset" />
+        <input type="button" class="bigbtn" value="Cancel" onclick="location.href='/'" />
     </p>
 </form>
 
-<form method="post" action="">
-    {% csrf_token %}
+<form method="get" action="{% url logout_url %}">
     <p><input type="submit" name="button_logout" value="logout" /></p>
 </form>
 {% endblock %}
