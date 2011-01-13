@@ -6,7 +6,6 @@ function setupAjaxForm(e, form_validations) {
 
 	// en/disable submit button
     var disableSubmit = function(val) {
-        //$(form.attr('id') + ' input[type=submit]').attr('disabled', val);
         for(var i = 0; i < form[0].elements.length; i++) {
             form[0].elements[i].disabled = val;
         }
@@ -50,7 +49,6 @@ function setupAjaxForm(e, form_validations) {
     };
 
     jQuery.ajax(options);
-    //return false;
 }
 
 $(document).ready(function() {

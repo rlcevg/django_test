@@ -18,7 +18,8 @@ class Contact(models.Model):
                      ('icq',   'ICQ'))
     person = models.ForeignKey(Person)
     contact = models.CharField(max_length=20)
-    contact_type = models.CharField(max_length=10, choices=CONTACT_TYPES, default='email')
+    contact_type = models.CharField(max_length=10, choices=CONTACT_TYPES,
+            default='email')
     contact_info = models.TextField()
 
     def __unicode__(self):

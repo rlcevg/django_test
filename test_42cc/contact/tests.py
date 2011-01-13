@@ -208,4 +208,5 @@ class AJAX_SubmitTest(TestCase):
         self.assertTrue('type' in response.content)
         self.assertTrue('"type": "error"' in response.content)
         self.assertTrue('errors' in response.content)
-        self.assertTrue('"birth_date": "Enter a valid date."' in response.content)
+        self.assertTrue('"birth_date": "Enter a valid date."' in
+                response.content)
