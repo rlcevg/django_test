@@ -13,8 +13,6 @@ def edit(request, queryset, object_id):
     response_dict = {}
 
     if request.method == "POST":
-#            print request.POST
-#        if 'button_apply' in request.POST:
         form = PersonForm(request.POST, request.FILES,
                 instance=person)
         formset = ContactFormSet(request.POST, request.FILES,
