@@ -228,7 +228,8 @@ id="id_biography" rows="20" cols="80" name="biography"></textarea></td></tr>
 class="calendar" src="/site_media/img/baloon_24.png" alt="Calendar"><input \
 id="id_birth_date" type="text" class="vDateField" name="birth_date" size="10" \
 /></td></tr>""")
-        f.is_reversed = True
+        f.reverseOrder(True)
+        self.assertTrue(f.is_reversed)
         self.assertEqual(f.as_table(), """<tr><th><label for="id_birth_date">\
 Birth date:</label></th><td><img class="calendar" src="/site_media/img/\
 baloon_24.png" alt="Calendar"><input id="id_birth_date" type="text" \

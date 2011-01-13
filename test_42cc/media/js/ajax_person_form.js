@@ -6,10 +6,12 @@ function setupAjaxForm(e, form_validations) {
 
 	// en/disable submit button
     var disableSubmit = function(val) {
+        $('#reverse_btn').attr('disabled', val);
+        $('#logout_btn').attr('disabled', val);
         for(var i = 0; i < form[0].elements.length; i++) {
             form[0].elements[i].disabled = val;
         }
-        toggleCalendarImg(val)
+        toggleCalendarImg(val);
     };
 
 	// setup loading message
@@ -35,10 +37,9 @@ function setupAjaxForm(e, form_validations) {
             if(json.type != 'success') {
                 var text = '<b>' + json.msg + '</b><br />';
                 text += '<div class="error">';
-                for (i in json.errors) {
-                    error = json.errors[i];
-                    text += '"' + i + '": ' + error + '<br />';
-                }
+                jQuery.each(json.errors, function(key, value) {
+                    text += '"' + key + '": ' + value + '<br />';
+                });
                 text += '</div>';
                 $(form_message).html(text);
             }
