@@ -18,4 +18,5 @@ urlpatterns = patterns('',
     (r'^edit/$', 'contact.views.edit', person_info),
     (r'^accounts/login/$', 'django.contrib.auth.views.login',
         {'template_name': 'contact/login.html'}),
+    (r'^accounts/logout/$', 'contact.views.site_logout', {}, 'logout_url'),
 )

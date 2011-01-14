@@ -23,8 +23,7 @@
     </p>
 </form>
 
-<form method="post" action="">
-    {% csrf_token %}
+<form method="get" action="{% url logout_url %}">
     <p><input type="submit" name="button_logout" value="logout" /></p>
 </form>
 {% endblock %}
