@@ -32,9 +32,7 @@ class PersonForm(ModelForm):
 
     def reverseOrder(self, val):
         if val:
-            itemlist = self.fields.items()
-            itemlist.reverse()
-            self.fields = SortedDict(itemlist)
+            self.fields.keyOrder.reverse()
         self.is_reversed = val
 
 
