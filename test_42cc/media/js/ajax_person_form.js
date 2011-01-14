@@ -35,10 +35,9 @@ function setupAjaxForm(e, form_validations) {
             if(json.type != 'success') {
                 var text = '<b>' + json.msg + '</b><br />';
                 text += '<div class="error">';
-                for (i in json.errors) {
-                    error = json.errors[i];
-                    text += '"' + i + '": ' + error + '<br />';
-                }
+                jQuery.each(json.errors, function(key, value) {
+                    text += '"' + key + '": ' + value + '<br />';
+                });
                 text += '</div>';
                 $(form_message).html(text);
             }
