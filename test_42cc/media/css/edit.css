@@ -55,3 +55,25 @@ input, textarea {
 input.bigbtn {
     width: 200px;
 }
+
+.oddtr
+{
+/*	background-color:#EFF1F1;*/
+	background-color:#FFFFCC;
+}
+.eventr
+{
+/*	background-color:#F8F8F8;*/
+	background-color:#66CCFF;
+}
+.trover
+{
+	background-color: #0099CC;
+}
+.trclick
+{
+	background-color: #00CCCC;
+}
+.other {
+    background-color: #6699CC;
+}

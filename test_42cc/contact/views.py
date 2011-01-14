@@ -1,8 +1,7 @@
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from contact.forms import PersonForm, ContactFormSet
-from django.http import HttpResponseRedirect, HttpResponse
-from django.core import urlresolvers
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.utils import simplejson
@@ -47,7 +46,10 @@ def edit(request, queryset, object_id):
     else:
         form = PersonForm(instance=person)
         formset = ContactFormSet(instance=person)
+        if 'button_reverse' in request.GET:
+            form.reverseOrder(request.GET['is_reversed'] == 'False')
 
+    response_dict['is_reversed'] = form.is_reversed
     response_dict.update({"form": form, "formset": formset})
     return render_to_response("contact/edit.html", response_dict,
             context_instance=RequestContext(request))
@@ -55,4 +57,4 @@ def edit(request, queryset, object_id):
 
 def site_logout(request):
     logout(request)
-    return HttpResponseRedirect(urlresolvers.reverse("home"))
+    return redirect("home")
