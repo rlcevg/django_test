@@ -6,9 +6,9 @@ function setupAjaxForm(e, form_validations) {
 
 	// en/disable submit button
     var disableSubmit = function(val) {
-        $('#reverse_btn').attr('disabled', val);
         $('#logout_btn').attr('disabled', val);
-        for(var i = 0; i < form[0].elements.length; i++) {
+        $('form#reverse_frm input[type="submit"]').attr('disabled', val);
+        for (var i = 0; i < form[0].elements.length; i++) {
             form[0].elements[i].disabled = val;
         }
         toggleCalendarImg(val);
@@ -24,7 +24,7 @@ function setupAjaxForm(e, form_validations) {
         data: form.serialize(),
         dataType: 'json',
         beforeSend: function() {
-            if(typeof form_validations == "function" && !form_validations()) {
+            if (typeof form_validations == "function" && !form_validations()) {
                 return false;
             }
             disableSubmit(true);
@@ -52,8 +52,28 @@ function setupAjaxForm(e, form_validations) {
     jQuery.ajax(options);
 }
 
+function setupReverseForm(e) {
+    e.preventDefault();
+
+    var $table = $('#bio_info_tbl');
+    var rows = $table.find('tbody > tr').get();
+    for (var i = rows.length; i > 0; i--) {
+        $table.children('tbody').append(rows[i-1]);
+    }
+}
+
 $(document).ready(function() {
+    //these two line adds the color to each different row
+    $("#mytable tbody tr:even").addClass("eventr");
+    $("#mytable tbody tr:odd").addClass("oddtr");
+    //handle the mouseover , mouseout and click event
+    $("#mytable tbody tr").mouseover(function() {$(this).addClass("trover");}).
+        mouseout(function() {$(this).removeClass("trover");});
+        //.click(function() {$(this).toggleClass("trclick");});
     jQuery("form#person_frm").submit(function(e) {
-        setupAjaxForm(e)
+        setupAjaxForm(e);
+    });
+    jQuery("form#reverse_frm").submit(function(e) {
+        setupReverseForm(e);
     });
 });

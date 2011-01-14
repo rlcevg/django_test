@@ -11,25 +11,23 @@
 <h1 style="text-align: center;">Edit user info</h1>
 
 <form method="get" action="" id="reverse_frm">
-    <p><input type="submit" name="button_reverse" value="reverse fields" id="reverse_btn" /></p>
+    <p><input type="submit" name="button_reverse" value="reverse fields" /></p>
     <input type="hidden" name="is_reversed" value="{{ is_reversed }}">
 </form>
 
 <form method="post" action="" id="person_frm" name="person_frm">{% csrf_token %}
-    <div id="bio_info_tbl">
-        <table border=5>
-            {{ form.as_table }}
-        </table>
-    </div>
-    <div id="contact_tbl"><p>
-        <table border=1>
-        <tr>
+    <table id="bio_info_tbl" border=5>
+        {{ form.as_table }}
+    </table>
+    <p>
+        <table id="mytable" border=1>
+        <thead><tr class="other">
             <th>#</th>
             <th>Type</th>
             <th>Contact</th>
             <th>Info</th>
             <th>Delete</th>
-        </tr>
+        </tr></thead>
         {{ formset.management_form }}
         {% for form_c in formset.forms %}
             <tr>
@@ -41,20 +39,18 @@
             </tr>
         {% endfor %}
         </table>
-    </p></div>
-    <p>
-        <div id="person_frm_msg"></div>
-        <input type="submit" class="bigbtn" name="button_apply" value="Apply" id="apply_btn" />
-        <input type="reset" class="bigbtn" value="Reset" />
-        <span id="cancel_span">
-            <a href="{% url home %}">Cancel</a>
-        </span>
-        <script>
-        <!--
-            $('#cancel_span').html('<input type="button" class="bigbtn" value="Cancel" onclick="location.href=\'/\'" />');
-        //-->
-        </script>
     </p>
+    <div id="person_frm_msg"></div>
+    <input type="submit" class="bigbtn" name="button_apply" value="Apply" id="apply_btn" />
+    <input type="reset" class="bigbtn" value="Reset" />
+    <span id="cancel_span">
+        <a href="{% url home %}">Cancel</a>
+    </span>
+    <script>
+    <!--
+        $('#cancel_span').html('<input type="button" class="bigbtn" value="Cancel" onclick="location.href=\'/\'" />');
+    //-->
+    </script>
 </form>
 
 <form method="get" action="{% url logout_url %}">
