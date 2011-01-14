@@ -223,7 +223,7 @@ name="firstname" maxlength="80" /></td></tr>
 <tr><th><label for="id_lastname">Lastname:</label></th><td><input \
 id="id_lastname" type="text" name="lastname" maxlength="80" /></td></tr>
 <tr><th><label for="id_biography">Biography:</label></th><td><textarea \
-id="id_biography" rows="20" cols="80" name="biography"></textarea></td></tr>
+id="id_biography" rows="10" cols="80" name="biography"></textarea></td></tr>
 <tr><th><label for="id_birth_date">Birth date:</label></th><td><img \
 class="calendar" src="/site_media/img/baloon_24.png" alt="Calendar"><input \
 id="id_birth_date" type="text" class="vDateField" name="birth_date" size="10" \
@@ -235,7 +235,7 @@ Birth date:</label></th><td><img class="calendar" src="/site_media/img/\
 baloon_24.png" alt="Calendar"><input id="id_birth_date" type="text" \
 class="vDateField" name="birth_date" size="10" /></td></tr>
 <tr><th><label for="id_biography">Biography:</label></th><td><textarea \
-id="id_biography" rows="20" cols="80" name="biography"></textarea></td></tr>
+id="id_biography" rows="10" cols="80" name="biography"></textarea></td></tr>
 <tr><th><label for="id_lastname">Lastname:</label></th><td><input \
 id="id_lastname" type="text" name="lastname" maxlength="80" /></td></tr>
 <tr><th><label for="id_firstname">Firstname:</label></th><td><input \

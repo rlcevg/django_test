@@ -14,7 +14,7 @@ class PersonForm(ModelForm):
         exclude = ('signin_date')
         #fields = ('birth_date', 'biography', 'lastname', 'firstname')
         widgets = {
-            'biography': Textarea(attrs={'cols': 80, 'rows': 20}),
+            'biography': Textarea(attrs={'cols': 80, 'rows': 10}),
             'birth_date': CalendarWidget(attrs={
                 'img': settings.SITE_MEDIA_PREFIX + "img/baloon_24.png",
             }),
@@ -42,7 +42,7 @@ class ContactForm(ModelForm):
     class Meta:
         model = Contact
         widgets = {
-            'contact_info': Textarea(attrs={'cols': 40, 'rows': 2})
+            'contact_info': Textarea(attrs={'cols': 40, 'rows': 1})
         }
 
 
