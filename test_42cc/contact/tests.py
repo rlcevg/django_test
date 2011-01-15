@@ -246,10 +246,7 @@ id="id_firstname" type="text" name="firstname" maxlength="80" /></td></tr>""")
 
 class TemplateTagTest(TestCase):
     def setUp(self):
-        class PersonAdmin(admin.ModelAdmin):
-            list_display = ('firstname', 'last_name')
-
-        admin.site.register(models.Person, PersonAdmin)
+        admin.site.register(models.Person)
 
     def test_templatetag(self):
         #Test valid data
