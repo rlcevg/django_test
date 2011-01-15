@@ -3,7 +3,6 @@ from contact.models import Person, Contact
 from django.forms.models import inlineformset_factory
 from contact.widgets import CalendarWidget
 from django.conf import settings
-from django.utils.datastructures import SortedDict
 
 
 class PersonForm(ModelForm):
