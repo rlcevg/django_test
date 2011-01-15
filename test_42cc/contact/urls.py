@@ -11,10 +11,13 @@ req_info = {
     'queryset': HttpRequestLog.objects.order_by('-datetime')[:10],
 }
 
-urlpatterns = patterns('',
-    (r'^$', 'django.views.generic.list_detail.object_detail', person_info,
+urlpatterns = patterns('django.views.generic.list_detail',
+    (r'^$', 'object_detail', person_info,
         'home'),
-    (r'^requests/$', 'django.views.generic.list_detail.object_list', req_info),
+    (r'^requests/$', 'object_list', req_info),
+)
+
+urlpatterns += patterns('',
     (r'^edit/$', 'contact.views.edit', person_info, 'editperson'),
     (r'^accounts/login/$', 'django.contrib.auth.views.login',
         {'template_name': 'contact/login.html'}),

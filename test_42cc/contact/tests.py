@@ -2,10 +2,12 @@ from django.test import TestCase
 from contact import models
 from django.conf import settings
 from contact.widgets import CalendarWidget
-from django import forms
+from django import forms, template
 from datetime import date
 from django.test import Client
 from contact.forms import PersonForm
+from django.contrib import admin
+from django.core import urlresolvers
 
 
 class PersonContactTest(TestCase):
@@ -240,3 +242,31 @@ id="id_biography" rows="10" cols="80" name="biography"></textarea></td></tr>
 id="id_lastname" type="text" name="lastname" maxlength="80" /></td></tr>
 <tr><th><label for="id_firstname">Firstname:</label></th><td><input \
 id="id_firstname" type="text" name="firstname" maxlength="80" /></td></tr>""")
+
+
+class TemplateTagTest(TestCase):
+    def setUp(self):
+        class PersonAdmin(admin.ModelAdmin):
+            list_display = ('firstname', 'last_name')
+
+        admin.site.register(models.Person, PersonAdmin)
+
+    def test_templatetag(self):
+        #Test valid data
+        p = models.Person(firstname="Any", lastname="Object")
+        t = template.Template('{% load contact_extra %}{% edit_link person %}')
+        c = template.Context({"person": p})
+        rendered = t.render(c)
+        #'<a href="/admin/contact/person/">Any Object</a>'
+        text = '<a href="' +\
+            urlresolvers.reverse('admin:contact_'+person.__name__+'_change', args=(p.id,)) +\
+            '">' + p + '</a>'
+        self.assertEqual(rendered, text)
+
+        #Test invalid data
+        self.assertRaises(
+            template.TemplateSyntaxError,
+            self.render_template,
+            '{% load contact_extra %}'
+            '{% edit_link person %}'
+        )
