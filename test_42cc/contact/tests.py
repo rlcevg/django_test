@@ -6,7 +6,6 @@ from django import forms, template
 from datetime import date
 from django.test import Client
 from contact.forms import PersonForm
-from django.contrib import admin
 from django.core import urlresolvers
 
 
@@ -245,9 +244,6 @@ id="id_firstname" type="text" name="firstname" maxlength="80" /></td></tr>""")
 
 
 class TemplateTagTest(TestCase):
-    def setUp(self):
-        admin.site.register(models.Person)
-
     def test_templatetag(self):
         #Test valid data
         p = models.Person(firstname="Any", lastname="Object")
@@ -256,14 +252,12 @@ class TemplateTagTest(TestCase):
         rendered = t.render(c)
         #'<a href="/admin/contact/person/">Any Object</a>'
         text = '<a href="' +\
-            urlresolvers.reverse('admin:contact_'+person.__name__+'_change', args=(p.id,)) +\
-            '">' + p + '</a>'
+            urlresolvers.reverse(
+                'admin:contact_' + p.__class__.__name__.lower() + '_change',
+                args=(p.id,)
+            ) + '">' + p.__unicode__() + '</a>'
         self.assertEqual(rendered, text)
 
         #Test invalid data
-        self.assertRaises(
-            template.TemplateSyntaxError,
-            self.render_template,
-            '{% load contact_extra %}'
-            '{% edit_link person %}'
-        )
+        t = template.Template('{% load contact_extra %}{% edit_link p %}')
+        self.assertEqual(t.render(c), '')
