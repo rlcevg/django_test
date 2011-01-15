@@ -6,7 +6,9 @@ from django import forms, template
 from datetime import date
 from django.test import Client
 from contact.forms import PersonForm
-from django.core import urlresolvers
+from django.core import urlresolvers, management
+import sys
+from StringIO import StringIO
 
 
 class PersonContactTest(TestCase):
@@ -261,3 +263,13 @@ class TemplateTagTest(TestCase):
         #Test invalid data
         t = template.Template('{% load contact_extra %}{% edit_link p %}')
         self.assertEqual(t.render(c), '')
+
+
+class CommandTest(TestCase):
+    def test_command(self):
+        _stdout = sys.stdout
+        sys.stdout = StringIO()
+        management.call_command('obj_in_model')
+        result = sys.stdout.getvalue()
+        sys.stdout = _stdout
+        self.assertTrue('Person (fields: 6' in result)
