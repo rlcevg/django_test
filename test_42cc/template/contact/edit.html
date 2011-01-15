@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load contact_extra %}
+
 {% block extra_head %}
     {{ form.media }}
 {% endblock %}
@@ -56,4 +58,5 @@
 <form method="get" action="{% url logout_url %}">
     <p><input type="submit" name="button_logout" value="logout" id="logout_btn" /></p>
 </form>
+    {% edit_link request.user %}
 {% endblock %}

@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
+{% load contact_extra %}
+
 {% block title %}About page{% endblock %}
+
 
 {% block content %}
     <h1 style="text-align: center;">All about "me"</h1>
@@ -23,4 +26,5 @@
     {% endif %}
     <p><a href="/requests/">10 last http requests</a></p>
     <p><a href="/edit/">Edit user info</a></p>
+    {% edit_link object %}
 {% endblock %}

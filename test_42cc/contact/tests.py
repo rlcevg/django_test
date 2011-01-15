@@ -251,7 +251,7 @@ class TemplateTagTest(TestCase):
         c = template.Context({"person": p})
         rendered = t.render(c)
         #'<a href="/admin/contact/person/">Any Object</a>'
-        text = '<a href="' +\
+        text = 'Edit <a href="' +\
             urlresolvers.reverse(
                 'admin:contact_' + p.__class__.__name__.lower() + '_change',
                 args=(p.id,)

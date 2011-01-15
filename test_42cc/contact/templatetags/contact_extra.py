@@ -19,12 +19,16 @@ class ResolveLinkNode(template.Node):
     def render(self, context):
         try:
             obj = self.object_link.resolve(context)
-            class_name = obj.__class__.__name__.lower()
             object_name = obj.__unicode__()
             url = urlresolvers.reverse(
-                'admin:contact_' + class_name + '_change', args=(obj.id,)
+                'admin:{0}_{1}_change'.format(
+                    obj._meta.app_label,
+                    obj._meta.module_name
+                ),
+                args=(obj.id,)
             )
-            return mark_safe(u'<a href="' + url + '">' + object_name + '</a>')
+            return mark_safe(u'Edit <a href="{0}">{1}</a>'.format(
+                    url, object_name))
         except template.VariableDoesNotExist:
             return ''
 
