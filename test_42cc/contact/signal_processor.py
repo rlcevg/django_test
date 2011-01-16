@@ -8,7 +8,7 @@ ACTION_DB_UNIQUE_ID = '{0}_{1}_action_db_unique_id'.format(
 
 
 def model_action_save(sender, **kwargs):
-    if not isinstance(sender, ActionDBModel):
+    if not issubclass(sender, ActionDBModel):
         if kwargs['created']:
             act = 'create'
         else:
@@ -17,7 +17,7 @@ def model_action_save(sender, **kwargs):
             model='{0}.{1}'.format(
                 sender.__module__,
                 sender.__name__
-            )
+            ),
             action=act,
             time=datetime.now(),
 #            user=
@@ -26,13 +26,13 @@ def model_action_save(sender, **kwargs):
 
 
 def model_action_delete(sender, **kwargs):
-    if not isinstance(sender, ActionDBModel):
+    if not issubclass(sender, ActionDBModel):
         act = 'del'
         action = ActionDBModel(
             model='{0}.{1}'.format(
                 sender.__module__,
                 sender.__name__
-            )
+            ),
             action=act,
             time=datetime.now(),
 #            user=
