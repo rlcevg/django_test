@@ -1,4 +1,5 @@
 from django.db import models
+#from django.contrib.auth.models import User
 
 
 class Person(models.Model):
@@ -36,3 +37,22 @@ class HttpRequestLog(models.Model):
 
     def __unicode__(self):
         return self.host + " " + self.full_path
+
+
+class ActionDBModel(models.Model):
+    ACTION_CREATE = 0
+    ACTION_EDIT = 1
+    ACTION_DELETE = 2
+    ACTION_TYPES = (
+        (ACTION_CREATE, 'Create'),
+        (ACTION_EDIT, 'Edit'),
+        (ACTION_DELETE, 'Delete')
+    )
+    model = models.CharField(max_length=100)
+    action = models.SmallIntegerField(choices=ACTION_TYPES)
+    time = models.DateTimeField()
+#    user = models.ForeignKey(User)
+
+
+from signal_processor import start_signal_processor
+start_signal_processor()

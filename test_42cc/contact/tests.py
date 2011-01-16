@@ -1,5 +1,5 @@
 from django.test import TestCase
-from contact import models
+from contact import models, signal_processor
 from django.conf import settings
 from contact.widgets import CalendarWidget
 from django import forms, template
@@ -9,6 +9,7 @@ from contact.forms import PersonForm
 from django.core import urlresolvers, management
 import sys
 from StringIO import StringIO
+from django.db.models.signals import post_save, post_delete
 
 
 class PersonContactTest(TestCase):
@@ -273,3 +274,82 @@ class CommandTest(TestCase):
         result = sys.stdout.getvalue()
         sys.stdout = _stdout
         self.assertTrue('Person (fields: 6' in result)
+
+
+class ActionDBModelTest(TestCase):
+    def setUp(self):
+        models.Person.objects.all().delete()
+        models.Contact.objects.all().delete()
+        models.ActionDBModel.objects.all().delete()
+
+    def test_action(self):
+        post_save.connect(
+            signal_processor.model_action_save,
+            dispatch_uid=signal_processor.ACTION_DB_UNIQUE_ID
+        )
+        post_delete.connect(
+            signal_processor.model_action_delete,
+            dispatch_uid=signal_processor.ACTION_DB_UNIQUE_ID
+        )
+
+        self.assertEqual(models.ActionDBModel.objects.count(), 0)
+        self.person = models.Person.objects.create(
+            firstname='Bob',
+            biography='need to get a job',
+            lastname='Job',
+            birth_date='2012-01-01',
+            signin_date='2010-12-07',)
+        self.assertEqual(models.ActionDBModel.objects.count(), 1)
+
+        action = models.ActionDBModel.objects.get()
+        self.assertEqual(action.model, '{0}.{1}'.format(
+            models.Person.__module__, models.Person.__name__
+        ))
+        self.assertEqual(action.action, models.ActionDBModel.ACTION_CREATE)
+
+        self.contact = models.Contact(
+            person=self.person,
+            contact_type='phone',
+            contact='(097)979-797-22',
+            contact_info='home number'
+        )
+        self.assertEqual(models.ActionDBModel.objects.count(), 1)
+        self.contact.save()
+        self.assertEqual(models.ActionDBModel.objects.count(), 2)
+
+        action = models.ActionDBModel.objects.all()[1]
+        self.assertEqual(action.model, '{0}.{1}'.format(
+            models.Contact.__module__, models.Contact.__name__
+        ))
+        self.assertEqual(action.action, models.ActionDBModel.ACTION_CREATE)
+
+        self.contact.contact_info = 'changed number'
+        self.assertEqual(models.ActionDBModel.objects.count(), 2)
+        self.contact.save()
+        self.assertEqual(models.ActionDBModel.objects.count(), 3)
+
+        action = models.ActionDBModel.objects.all()[2]
+        self.assertEqual(action.model, '{0}.{1}'.format(
+            models.Contact.__module__, models.Contact.__name__
+        ))
+        self.assertEqual(action.action, models.ActionDBModel.ACTION_EDIT)
+
+        self.contact = models.Contact.objects.get()
+        self.assertEqual(models.ActionDBModel.objects.count(), 3)
+        self.contact.delete()
+        self.assertEqual(models.ActionDBModel.objects.count(), 4)
+
+        action = models.ActionDBModel.objects.all()[3]
+        self.assertEqual(action.model, '{0}.{1}'.format(
+            models.Contact.__module__, models.Contact.__name__
+        ))
+        self.assertEqual(action.action, models.ActionDBModel.ACTION_DELETE)
+
+        post_delete.disconnect(
+            signal_processor.model_action_delete,
+            dispatch_uid=signal_processor.ACTION_DB_UNIQUE_ID
+        )
+
+        self.assertEqual(models.ActionDBModel.objects.count(), 4)
+        self.person.delete()
+        self.assertEqual(models.ActionDBModel.objects.count(), 4)
