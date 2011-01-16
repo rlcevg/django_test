@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 
 
 class Person(models.Model):
@@ -48,4 +48,4 @@ class ActionDBModel(models.Model):
     model = models.CharField(max_length=20)
     action = models.CharField(max_length=10, choices=ACTION_TYPES)
     time = models.DateTimeField()
-    user = models.ForeignKey(User)
+#    user = models.ForeignKey(User)
