@@ -280,6 +280,7 @@ class ActionDBModelTest(TestCase):
     def setUp(self):
         models.Person.objects.all().delete()
         models.Contact.objects.all().delete()
+        models.ActionDBModel.objects.all().delete()
 
     def test_action(self):
         post_save.connect(
@@ -304,7 +305,7 @@ class ActionDBModelTest(TestCase):
         self.assertEqual(action.model, '{0}.{1}'.format(
             models.Person.__module__, models.Person.__name__
         ))
-        self.assertEqual(action.action, 'create')
+        self.assertEqual(action.action, models.ActionDBModel.ACTION_CREATE)
 
         self.contact = models.Contact(
             person=self.person,
@@ -320,7 +321,7 @@ class ActionDBModelTest(TestCase):
         self.assertEqual(action.model, '{0}.{1}'.format(
             models.Contact.__module__, models.Contact.__name__
         ))
-        self.assertEqual(action.action, 'create')
+        self.assertEqual(action.action, models.ActionDBModel.ACTION_CREATE)
 
         self.contact.contact_info = 'changed number'
         self.assertEqual(models.ActionDBModel.objects.count(), 2)
@@ -331,7 +332,7 @@ class ActionDBModelTest(TestCase):
         self.assertEqual(action.model, '{0}.{1}'.format(
             models.Contact.__module__, models.Contact.__name__
         ))
-        self.assertEqual(action.action, 'edit')
+        self.assertEqual(action.action, models.ActionDBModel.ACTION_EDIT)
 
         self.contact = models.Contact.objects.get()
         self.assertEqual(models.ActionDBModel.objects.count(), 3)
@@ -342,7 +343,7 @@ class ActionDBModelTest(TestCase):
         self.assertEqual(action.model, '{0}.{1}'.format(
             models.Contact.__module__, models.Contact.__name__
         ))
-        self.assertEqual(action.action, 'del')
+        self.assertEqual(action.action, models.ActionDBModel.ACTION_DELETE)
 
         post_delete.disconnect(
             signal_processor.model_action_delete,

@@ -40,12 +40,19 @@ class HttpRequestLog(models.Model):
 
 
 class ActionDBModel(models.Model):
+    ACTION_CREATE = 0
+    ACTION_EDIT = 1
+    ACTION_DELETE = 2
     ACTION_TYPES = (
-        ('create', 'Create'),
-        ('edit', 'Edit'),
-        ('del', 'Delete'),
+        (ACTION_CREATE, 'Create'),
+        (ACTION_EDIT, 'Edit'),
+        (ACTION_DELETE, 'Delete')
     )
-    model = models.CharField(max_length=20)
-    action = models.CharField(max_length=10, choices=ACTION_TYPES)
+    model = models.CharField(max_length=100)
+    action = models.SmallIntegerField(choices=ACTION_TYPES)
     time = models.DateTimeField()
 #    user = models.ForeignKey(User)
+
+
+from signal_processor import start_signal_processor
+start_signal_processor()
