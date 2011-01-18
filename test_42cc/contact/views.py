@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.utils import simplejson
-from contact.models import HttpRequestLog, PriorityStruct as PS
+from contact.models import HttpRequestLog
 from itertools import chain
 
 

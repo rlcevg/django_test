@@ -36,7 +36,7 @@ class PriorityStruct(object):
         (PRIORITY_HIGH, 'High'),
         (PRIORITY_MEDIUM, 'Medium'),
         (PRIORITY_LOW, 'Low'),
-    ) 
+    )
     PRIORITY_DICT = dict(PRIORITY_TYPES)
 
 

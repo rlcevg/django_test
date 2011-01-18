@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import *
-from contact.models import Person, HttpRequestLog
+from contact.models import Person
 
 person_info = {
     'queryset': Person.objects.all(),
