@@ -6,10 +6,6 @@ person_info = {
     'object_id': 1,
 }
 
-req_info = {
-    'template_name': 'contact/requests.html',
-}
-
 urlpatterns = patterns('django.views.generic.list_detail',
     (r'^$', 'object_detail', person_info, 'home'),
 )
@@ -17,7 +13,8 @@ urlpatterns = patterns('django.views.generic.list_detail',
 urlpatterns += patterns('contact.views',
     (r'^edit/$', 'edit', person_info, 'editperson'),
     (r'^accounts/logout/$', 'site_logout', {}, 'logout_url'),
-    (r'^requests/$', 'requests_view', req_info),
+    (r'^requests/$', 'requests_view', {}, 'request_home'),
+    (r'^requests/(?P<priority>\d+)/$', 'requests_view'),
 )
 
 urlpatterns += patterns('',

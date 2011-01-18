@@ -62,30 +62,22 @@ def site_logout(request):
     return redirect("home")
 
 
-def requests_view(request, template_name='contact/requests.html'):
+def requests_view(request, template_name='contact/requests.html', priority=-1):
     if request.method == "GET":
-        if 'prior_btn' in request.GET:
-            try:
-                pr = int(request.GET['prior_btn'])
-                if pr in PS.PRIORITY_DICT:
-                    pr_filter = HttpRequestLog.objects.filter(priority=pr).\
-                        order_by('-datetime')[:10]
-                    pr_exclude = HttpRequestLog.objects.exclude(priority=pr).\
-                        order_by('-datetime')[:10]
-                    object_list = list(chain(pr_filter, pr_exclude))[:10]
-                    return render_to_response(
-                        template_name,
-                        {'object_list': object_list},
-                        context_instance=RequestContext(request)
-                    )
-            except ValueError:
-                pass
+        pr_filter = HttpRequestLog.objects.filter(priority=priority).\
+            order_by('-datetime')[:10]
+        pr_exclude = HttpRequestLog.objects.exclude(priority=priority).\
+            order_by('-datetime')[:10]
+        object_list = list(chain(pr_filter, pr_exclude))[:10]
+        return render_to_response(
+            template_name,
+            {'object_list': object_list},
+            context_instance=RequestContext(request)
+        )
 
     elif request.method == "POST":
         if 'clear_btn' in request.POST:
-            rec = HttpRequestLog.objects.latest('datetime')
             HttpRequestLog.objects.all().delete()
-            rec.save()
 
     object_list = HttpRequestLog.objects.order_by('-datetime')[:10]
     return render_to_response(template_name, {'object_list': object_list},
