@@ -33,12 +33,21 @@
         <p>No request entries found.</p>
     {% endif %}
     <p>
+        <input type="submit" name="clear_btn" value="Clear">
+    <br>
         Post request with priority:
         <input type="submit" name="priorityVal" value="{{ priorityObj.PRIORITY_HIGH }}">
         <input type="submit" name="priorityVal" value="{{ priorityObj.PRIORITY_MEDIUM }}">
         <input type="submit" name="priorityVal" value="{{ priorityObj.PRIORITY_LOW }}">
     </p>
-    <p><a href="/">Back to biography</a></p>
     </form>
+    <form method="get" action="">
+        Show requests with priority:
+        <input type="submit" name="prior_btn" value="{{ priorityObj.PRIORITY_HIGH }}">
+        <input type="submit" name="prior_btn" value="{{ priorityObj.PRIORITY_MEDIUM }}">
+        <input type="submit" name="prior_btn" value="{{ priorityObj.PRIORITY_LOW }}">
+        <input type="submit" name="prior_btn" value="Unsorted">
+    </form>
+    <p><a href="/">Back to biography</a></p>
     <p>settings.DEBUG = {{ settings.DEBUG }}</p>
 {% endblock %}

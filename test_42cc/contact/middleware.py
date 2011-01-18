@@ -12,5 +12,5 @@ class RequestLogMiddleware(object):
         httpRequestLog.is_secure = request.is_secure()
         httpRequestLog.method = request.method
         if PS.PRIORITY_VAR in request.REQUEST:
-          httpRequestLog.priority = request.REQUEST[PS.PRIORITY_VAR]
+            httpRequestLog.priority = request.REQUEST[PS.PRIORITY_VAR]
         httpRequestLog.save()

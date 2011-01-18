@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.utils import simplejson
+from contact.models import HttpRequestLog, PriorityStruct as PS
+from itertools import chain
 
 
 @login_required
@@ -58,3 +60,33 @@ def edit(request, queryset, object_id):
 def site_logout(request):
     logout(request)
     return redirect("home")
+
+
+def requests_view(request, template_name='contact/requests.html'):
+    if request.method == "GET":
+        if 'prior_btn' in request.GET:
+            try:
+                pr = int(request.GET['prior_btn'])
+                if pr in PS.PRIORITY_DICT:
+                    pr_filter = HttpRequestLog.objects.filter(priority=pr).\
+                        order_by('-datetime')[:10]
+                    pr_exclude = HttpRequestLog.objects.exclude(priority=pr).\
+                        order_by('-datetime')[:10]
+                    object_list = list(chain(pr_filter, pr_exclude))[:10]
+                    return render_to_response(
+                        template_name,
+                        {'object_list': object_list},
+                        context_instance=RequestContext(request)
+                    )
+            except ValueError:
+                pass
+
+    elif request.method == "POST":
+        if 'clear_btn' in request.POST:
+            rec = HttpRequestLog.objects.latest('datetime')
+            HttpRequestLog.objects.all().delete()
+            rec.save()
+
+    object_list = HttpRequestLog.objects.order_by('-datetime')[:10]
+    return render_to_response(template_name, {'object_list': object_list},
+        context_instance=RequestContext(request))
