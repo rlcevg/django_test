@@ -27,6 +27,18 @@ class Contact(models.Model):
         return "{0}: {1}".format(self.get_contact_type_display(), self.contact)
 
 
+class PriorityStruct(object):
+    PRIORITY_VAR = 'priorityVal'
+    PRIORITY_HIGH = 0
+    PRIORITY_MEDIUM = 1
+    PRIORITY_LOW = 2
+    PRIORITY_TYPES = (
+        (PRIORITY_HIGH, 'High'),
+        (PRIORITY_MEDIUM, 'Medium'),
+        (PRIORITY_LOW, 'Low'),
+    ) 
+
+
 class HttpRequestLog(models.Model):
     host = models.CharField(max_length=80)
     full_path = models.TextField()
@@ -34,6 +46,10 @@ class HttpRequestLog(models.Model):
     is_secure = models.BooleanField()
     method = models.CharField(max_length=4)
     datetime = models.DateTimeField()
+    priority = models.SmallIntegerField(
+        choices=PriorityStruct.PRIORITY_TYPES,
+        default=PriorityStruct.PRIORITY_MEDIUM,
+    )
 
     def __unicode__(self):
         return self.host + " " + self.full_path
