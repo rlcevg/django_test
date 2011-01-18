@@ -1,4 +1,4 @@
-from contact.models import HttpRequestLog
+from contact.models import HttpRequestLog, PriorityStruct as PS
 from datetime import datetime
 
 
@@ -11,4 +11,6 @@ class RequestLogMiddleware(object):
         httpRequestLog.is_ajax = request.is_ajax()
         httpRequestLog.is_secure = request.is_secure()
         httpRequestLog.method = request.method
+        if PS.PRIORITY_VAR in request.REQUEST:
+            httpRequestLog.priority = request.REQUEST[PS.PRIORITY_VAR]
         httpRequestLog.save()

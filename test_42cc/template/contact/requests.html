@@ -4,7 +4,11 @@
 
 {% block content %}
     {% if object_list %}
+    <form method="post" action="">{% csrf_token %}
         <table border="1">
+            <caption>
+                Requests
+            </caption>
             <tr>
                 <th>#</th>
                 <th>Host</th>
@@ -13,6 +17,7 @@
                 <th>Method</th>
                 <th>Is Ajax</th>
                 <th>Is Secure</th>
+                <th>Priority</th>
             </tr>
             {% for request in object_list %}
                 <tr>
@@ -23,12 +28,58 @@
                     <td>{{ request.method }}</td>
                     <td>{{ request.is_ajax }}</td>
                     <td>{{ request.is_secure }}</td>
+                    <td>{{ request.priority }}</td>
                 </tr>
             {% endfor %}
         </table>
     {% else %}
         <p>No request entries found.</p>
     {% endif %}
+        <p><input type="submit" name="clear_btn" value="Clear"></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th colspan={{ priorityObj.PRIORITY_DICT|length }}>
+                    Post priority request demo:
+                 </th>
+             </tr>
+         </thead>
+         <tbody>
+            <tr>
+                {% for key in priorityObj.PRIORITY_DICT %}
+                <td>
+                    <input type="submit" name="{{ priorityObj.PRIORITY_VAR }}" value="{{ key }}">
+                </td>
+                {% endfor %}
+            <tr>
+         </tbody>
+    </table>
+    </form>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th colspan={{ priorityObj.PRIORITY_DICT|length }}>
+                    Show requests with priority:
+                 </th>
+             </tr>
+         </thead>
+         <tbody>
+            <tr>
+                {% for key in priorityObj.PRIORITY_DICT %}
+                <td>
+                    <form method="get" action="{% url request_home %}{{ key }}">
+                        <input type="submit" value="{{ key }}">
+                    </form>
+                </td>
+                {% endfor %}
+            <tr>
+         </tbody>
+    </table>
+    <form method="get" action="{% url request_home %}">
+        <input type="submit" value="Unsorted">
+    </form>
+
     <p><a href="/">Back to biography</a></p>
-    <p>settings.DEBUG = {{ settings.DEBUG }}</p>
 {% endblock %}

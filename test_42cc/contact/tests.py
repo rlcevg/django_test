@@ -353,3 +353,45 @@ class ActionDBModelTest(TestCase):
         self.assertEqual(models.ActionDBModel.objects.count(), 4)
         self.person.delete()
         self.assertEqual(models.ActionDBModel.objects.count(), 4)
+
+
+class PriorityFeatureTest(TestCase):
+    def test_priority(self):
+        post_data = {}
+        response = self.client.post('/requests/', post_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(
+            models.PriorityStruct.PRIORITY_VAR in response.context
+        )
+        p = models.HttpRequestLog.objects.get()
+        self.assertEqual(p.priority, 1)
+
+        post_data = {
+            models.PriorityStruct.PRIORITY_VAR:
+                models.PriorityStruct.PRIORITY_HIGH,
+        }
+        response = self.client.post('/requests/', post_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(models.HttpRequestLog.objects.count(), 2)
+        p = models.HttpRequestLog.objects.all()[1]
+        self.assertEqual(p.priority, models.PriorityStruct.PRIORITY_HIGH)
+
+        post_data = {
+            models.PriorityStruct.PRIORITY_VAR:
+                models.PriorityStruct.PRIORITY_MEDIUM,
+        }
+        response = self.client.post('/requests/', post_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(models.HttpRequestLog.objects.count(), 3)
+        p = models.HttpRequestLog.objects.all()[2]
+        self.assertEqual(p.priority, models.PriorityStruct.PRIORITY_MEDIUM)
+
+        post_data = {
+            models.PriorityStruct.PRIORITY_VAR:
+                models.PriorityStruct.PRIORITY_LOW,
+        }
+        response = self.client.post('/requests/', post_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(models.HttpRequestLog.objects.count(), 4)
+        p = models.HttpRequestLog.objects.all()[3]
+        self.assertEqual(p.priority, models.PriorityStruct.PRIORITY_LOW)
