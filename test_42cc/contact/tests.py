@@ -360,36 +360,38 @@ class PriorityFeatureTest(TestCase):
         post_data = {}
         response = self.client.post('/requests/', post_data)
         self.assertEqual(response.status_code, 200)
-        self.assertFalse('priorityVal' in response.content)
+        self.assertFalse(
+            models.PriorityStruct.PRIORITY_VAR in response.context
+        )
         p = models.HttpRequestLog.objects.get()
         self.assertEqual(p.priority, 1)
 
         post_data = {
-            'prior_btn_0': models.PriorityStruct.PRIORITY_HIGH,
+            models.PriorityStruct.PRIORITY_VAR:
+                models.PriorityStruct.PRIORITY_HIGH,
         }
         response = self.client.post('/requests/', post_data)
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('priorityVal' in response.content)
         self.assertEqual(models.HttpRequestLog.objects.count(), 2)
-        p = models.HttpRequestLog.objects.all[1]
+        p = models.HttpRequestLog.objects.all()[1]
         self.assertEqual(p.priority, models.PriorityStruct.PRIORITY_HIGH)
 
         post_data = {
-            'prior_btn_1': models.PriorityStruct.PRIORITY_MEDIUM,
+            models.PriorityStruct.PRIORITY_VAR:
+                models.PriorityStruct.PRIORITY_MEDIUM,
         }
         response = self.client.post('/requests/', post_data)
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('priorityVal' in response.content)
         self.assertEqual(models.HttpRequestLog.objects.count(), 3)
-        p = models.HttpRequestLog.objects.all[2]
+        p = models.HttpRequestLog.objects.all()[2]
         self.assertEqual(p.priority, models.PriorityStruct.PRIORITY_MEDIUM)
 
         post_data = {
-            'prior_btn_2': models.PriorityStruct.PRIORITY_LOW,
+            models.PriorityStruct.PRIORITY_VAR:
+                models.PriorityStruct.PRIORITY_LOW,
         }
         response = self.client.post('/requests/', post_data)
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('priorityVal' in response.content)
         self.assertEqual(models.HttpRequestLog.objects.count(), 4)
-        p = models.HttpRequestLog.objects.all[3]
+        p = models.HttpRequestLog.objects.all()[3]
         self.assertEqual(p.priority, models.PriorityStruct.PRIORITY_LOW)
