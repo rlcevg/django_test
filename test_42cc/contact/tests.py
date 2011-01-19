@@ -249,21 +249,21 @@ id="id_firstname" type="text" name="firstname" maxlength="80" /></td></tr>""")
 class TemplateTagTest(TestCase):
     def test_templatetag(self):
         #Test valid data
-        p = models.Person(firstname="Any", lastname="Object")
+        p = models.Person(
+            firstname="Any",
+            lastname="Object",
+            birth_date="2010-12-07",
+            signin_date="2010-12-07")
         t = template.Template('{% load contact_extra %}{% edit_link person %}')
         c = template.Context({"person": p})
-        rendered = t.render(c)
-        #'<a href="/admin/contact/person/">Any Object</a>'
+        self.assertEqual(t.render(c), '')
+        p.save()
         text = 'Edit <a href="' +\
             urlresolvers.reverse(
                 'admin:contact_' + p.__class__.__name__.lower() + '_change',
                 args=(p.id,)
             ) + '">' + p.__unicode__() + '</a>'
-        self.assertEqual(rendered, text)
-
-        #Test invalid data
-        t = template.Template('{% load contact_extra %}{% edit_link p %}')
-        self.assertEqual(t.render(c), '')
+        self.assertEqual(t.render(c), text)
 
 
 class CommandTest(TestCase):
