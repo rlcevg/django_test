@@ -1,12 +1,12 @@
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
-from contact.forms import PersonForm, ContactFormSet
+from contact.forms import PersonForm, ContactFormSet, RequestForm
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.utils import simplejson
-from contact.models import HttpRequestLog
-from itertools import chain
+from contact.models import HttpRequestLog, getOrderList, getOrderedList,\
+existedPriority, reorderPriority, deletePriority
 
 
 @login_required
@@ -63,22 +63,73 @@ def site_logout(request):
 
 
 def requests_view(request, template_name='contact/requests.html', priority=-1):
+    def changePriority(post):
+        form = RequestForm(post)
+        if form.is_valid():
+            dumb = form.save(commit=False)
+            lst = HttpRequestLog.objects
+            for field in form.fields:
+                if field != 'priority':
+                    kwargs = {field: getattr(dumb, field)}
+                    lst = lst.filter(**kwargs)
+            if lst.update(priority=dumb.priority) > 0:
+                existedPriority(dumb.priority)
+
+    def addPriority(post, rdict):
+        rdict['existed'] = existedPriority(post['addPriority'])
+        return simplejson.dumps(rdict, ensure_ascii=False)
+
+    def processAjaxReq(post, rdict):
+        req_obj = HttpRequestLog.objects.get(pk=post['id'])
+        errors = {}
+        if req_obj != None:
+            req_obj.priority = post['priority']
+            req_obj.save()
+            if not existedPriority(req_obj.priority):
+                rdict['order_list'] = getOrderList()
+        else:
+            errors['Request'] = 'Object not found'
+
+        if len(errors) > 0:
+            rdict['type'] = 'error'
+            rdict['msg'] = 'Fix errors and submit again'
+            rdict['errors'] = errors
+        else:
+            rdict['type'] = 'success'
+            rdict['msg'] = 'Reload the page'
+        return simplejson.dumps(rdict, ensure_ascii=False)
+
+    response_dict = {}
+
     if request.method == "GET":
-        pr_filter = HttpRequestLog.objects.filter(priority=priority).\
-            order_by('-datetime')[:10]
-        pr_exclude = HttpRequestLog.objects.exclude(priority=priority).\
-            order_by('-datetime')[:10]
-        object_list = list(chain(pr_filter, pr_exclude))[:10]
-        return render_to_response(
-            template_name,
-            {'object_list': object_list},
-            context_instance=RequestContext(request)
-        )
+        order_list = getOrderList()
+        object_list = getOrderedList(order_list, 16)
+        form = RequestForm()
 
     elif request.method == "POST":
         if 'clear_btn' in request.POST:
             HttpRequestLog.objects.all().delete()
+            return redirect('request_home')
+        elif 'reorder' in request.POST:
+            reorderPriority(request.POST)
+            return HttpResponse()
+        elif 'delPriority' in request.POST:
+            deletePriority(request.POST)
+            return HttpResponse()
+        elif 'addPriority' in request.POST:
+            json = addPriority(request.POST, response_dict)
+            return HttpResponse(json, mimetype='application/javascript')
+        elif 'clone' in request.POST:
+            changePriority(request.POST)
+            return redirect('request_home')
+        elif request.is_ajax():
+            json = processAjaxReq(request.POST, response_dict)
+            return HttpResponse(json, mimetype='application/javascript')
 
-    object_list = HttpRequestLog.objects.order_by('-datetime')[:10]
-    return render_to_response(template_name, {'object_list': object_list},
+    response_dict.update({
+        'object_list': object_list,
+        'order_list': order_list,
+        'form': form,
+    })
+    return render_to_response(template_name, response_dict,
         context_instance=RequestContext(request))
