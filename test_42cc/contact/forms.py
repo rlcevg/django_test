@@ -1,5 +1,5 @@
-from django.forms import ModelForm, Textarea
-from contact.models import Person, Contact
+from django.forms import ModelForm, Textarea, TextInput
+from contact.models import Person, Contact, HttpRequestLog
 from django.forms.models import inlineformset_factory
 from contact.widgets import CalendarWidget
 from django.conf import settings
@@ -45,3 +45,13 @@ class ContactForm(ModelForm):
 
 ContactFormSet = inlineformset_factory(Person, Contact, form=ContactForm,
         max_num=5, extra=2)
+
+
+class RequestForm(ModelForm):
+    class Meta:
+        model = HttpRequestLog
+        exclude = ('datetime')
+        widgets = {
+            'full_path': TextInput,
+            'priority': TextInput(attrs={'size': 4}),
+        }

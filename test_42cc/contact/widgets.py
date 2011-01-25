@@ -28,6 +28,6 @@ class CalendarWidget(DateInput):
         output = super(DateInput, self).render(name, value, attrs)
         if 'img' in self.cw_attrs:
             output = mark_safe(u'''<img class="calendar" src="{0}" \
-alt="Calendar">'''.format(self.cw_attrs['img'])) + output
+alt="Calendar">'''.format(self.cw_attrs['img']) + output)
 
         return output
