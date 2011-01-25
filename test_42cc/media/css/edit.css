@@ -1,3 +1,5 @@
+@import url('ajax.css');
+
 label {
 	font-weight: bold;
 	display: block;
@@ -10,46 +12,6 @@ input, textarea {
 
 #person_frm_msg {
 	display: none;
-}
-
-.submit {
-	text-align: right;
-}
-	.submit input {
-		font-weight: bold;
-		width: 75px;
-		border: 1px solid;
-		border-color: #999 #333 #333 #999;
-	}
-
-.error, .success {
-	padding: 5px 5px 5px 25px;
-    margin: 5px 0px;
-}
-
-.error {
-	border: 1px solid #ff0000;
-	background: #ffdddd;
-/*	background-image: url('images/action-error.gif');*/
-	background-repeat: no-repeat;
-	background-position: 5px center;
-	color: #FF0000;
-}
-
-.success {
-	border: 1px solid #009900;
-	background: #cfffcf;
-	color: #003300;
-/*	background-image: url('images/action-success.gif');*/
-	background-repeat: no-repeat;
-	background-position: 5px center;
-}
-
-.loading {
-	background: #ffdddd;
-	font-weight: bold;
-	padding: 6px;
-	font-size: 8pt;
 }
 
 input.bigbtn {

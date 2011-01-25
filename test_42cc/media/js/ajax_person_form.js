@@ -30,11 +30,10 @@ function setupAjaxForm(e, form_validations) {
             disableSubmit(true);
         },
         success: function(json) {
-            $(form_message).hide()
             $(form_message).removeClass().addClass(json.type).html(json.msg).fadeIn('slow');
             disableSubmit(false);
 
-            if(json.type != 'success') {
+            if (json.type != 'success') {
                 var text = '<b>' + json.msg + '</b><br />';
                 text += '<div class="error">';
                 jQuery.each(json.errors, function(key, value) {

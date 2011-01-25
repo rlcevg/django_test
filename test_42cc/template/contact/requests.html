@@ -1,10 +1,21 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+    <link rel="stylesheet" media="all" type="text/css" href="{{ settings.SITE_MEDIA_PREFIX }}css/ajax.css">
+    <link rel="stylesheet" media="all" type="text/css" href="{{ settings.SITE_MEDIA_PREFIX }}css/requests.css">
+    <script src="{{ settings.SITE_MEDIA_PREFIX }}js/jquery.min.js" type="text/javascript"></script>
+    <script src="{{ settings.SITE_MEDIA_PREFIX }}js/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="{{ settings.SITE_MEDIA_PREFIX }}js/requests.js" type="text/javascript"></script>
+{% endblock %}
+
 {% block title %}Requests info page{% endblock %}
 
+
 {% block content %}
+<div class="mainbar">
     {% if object_list %}
-    <form method="post" action="">{% csrf_token %}
+    <form method="post" action="" id="id_req_frm">{% csrf_token %}
+        <div id="id_req_msg"></div>
         <table border="1">
             <caption>
                 Requests
@@ -21,14 +32,22 @@
             </tr>
             {% for request in object_list %}
                 <tr>
+                    <input type="hidden" id="id_req" value="{{ request.id }}" name="req">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ request.host }}</td>
                     <td>{{ request.full_path }}</td>
-                    <td>{{ request.datetime }}</td>
+                    <td>{{ request.datetime|date:"d-m-Y H:i:s.u" }}</td>
                     <td>{{ request.method }}</td>
                     <td>{{ request.is_ajax }}</td>
                     <td>{{ request.is_secure }}</td>
-                    <td>{{ request.priority }}</td>
+                    <td><table><tr>
+                        <td width=65 align="center">
+                            <span id="id_pr_{{ request.id }}">{{ request.priority }}</span>
+                        </td>
+                        <td width=65 align="center">
+                            <input type="button" id="id_req_btn_{{ request.id }}" onclick="edit_rec('{{ request.id }}')" name="req_btn" value="Edit" align="right">
+                        </td>
+                    </tr></table></td>
                 </tr>
             {% endfor %}
         </table>
@@ -36,50 +55,52 @@
         <p>No request entries found.</p>
     {% endif %}
         <p><input type="submit" name="clear_btn" value="Clear"></p>
-
-    <table>
-        <thead>
-            <tr>
-                <th colspan={{ priorityObj.PRIORITY_DICT|length }}>
-                    Post priority request demo:
-                 </th>
-             </tr>
-         </thead>
-         <tbody>
-            <tr>
-                {% for key in priorityObj.PRIORITY_DICT %}
-                <td>
-                    <input type="submit" name="{{ priorityObj.PRIORITY_VAR }}" value="{{ key }}">
-                </td>
-                {% endfor %}
-            <tr>
-         </tbody>
-    </table>
-    </form>
-    <br>
-    <table>
-        <thead>
-            <tr>
-                <th colspan={{ priorityObj.PRIORITY_DICT|length }}>
-                    Show requests with priority:
-                 </th>
-             </tr>
-         </thead>
-         <tbody>
-            <tr>
-                {% for key in priorityObj.PRIORITY_DICT %}
-                <td>
-                    <form method="get" action="{% url request_home %}{{ key }}">
-                        <input type="submit" value="{{ key }}">
-                    </form>
-                </td>
-                {% endfor %}
-            <tr>
-         </tbody>
-    </table>
-    <form method="get" action="{% url request_home %}">
-        <input type="submit" value="Unsorted">
     </form>
 
+    <form method="post" action="{% url request_home %}" id="id_temp_frm">{% csrf_token %}
+        <table border="1">
+            <caption>
+                Template
+            </caption>
+            <tr>
+                <th>Host</th>
+                <th>Path</th>
+                <th>Method</th>
+                <th>Is Ajax</th>
+                <th>Is Secure</th>
+                <th style="color:#228B22;" colspan=2>Priority</th>
+            </tr>
+            <tr>
+                <td>{{ form.host }}</td>
+                <td>{{ form.full_path }}</td>
+                <td>{{ form.method }}</td>
+                <td>{{ form.is_ajax }}</td>
+                <td>{{ form.is_secure }}</td>
+                <td><input type="submit" id="id_temp_btn" name="clone" value="Set"></td>
+                <td>{{ form.priority }}</td>
+            </tr>
+        </table>
+    </form>
     <p><a href="/">Back to biography</a></p>
+</div>
+
+<div class="sidebar">
+    <form method="get" action="" id="id_pr_frm">
+        <strong>Priority order:</strong>
+        <div style="text-align: center;">
+            <input type="text" size=4 id="id_pr_add" value={{ priorityObj.PRIORITY_DEFAULT }}>
+            <input type="button" name="addPriority" value="Add" onclick="add_priority()">
+        </div>
+        <ul id="order_list" name="order_list">
+        {% for item in order_list %}
+            <li id="listItem_{{ item }}">
+                <img src="{{ settings.SITE_MEDIA_PREFIX }}img/arrow.png" alt="move" width="16" height="16" class="handle" />
+                {{ item }}
+            </li>
+        {% endfor %}
+        </ul>
+        <input type="button" id="id_reorder" name="reorder" value="Apply" onclick="apply_order()">
+        <input type="button" name="delPriority" value="Delete" onclick="delete_priority()">
+    </form>
+</div>
 {% endblock %}
