@@ -5,7 +5,7 @@ from contact.widgets import CalendarWidget
 from django import forms, template
 from datetime import date
 from django.test import Client
-from contact.forms import PersonForm, RequestForm
+from contact.forms import PersonForm
 from django.core import urlresolvers, management
 import sys
 from StringIO import StringIO
@@ -449,3 +449,26 @@ class PriorityFeatureTest(TestCase):
         self.assertEqual(models.PriorityOrder.objects.count(), 3)
         self.assertTrue(models.HttpRequestLog.objects.filter(priority=2.0).\
             count() > 0)
+
+        #Test ASC/DESC feature
+        post_data = {'addPriority': 0.6}
+        self.client.post('/requests/', post_data, **kwargs)
+        post_data = {
+            'sortPriority': 1,
+        }
+        response = self.client.post('/requests/', post_data, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        pr = models.PriorityOrder.objects.get(pr_order=0)
+        self.assertEqual(pr.priority, 0.6)
+        pr = models.PriorityOrder.objects.get(pr_order=1)
+        self.assertEqual(pr.priority, 0.8)
+        pr = models.PriorityOrder.objects.get(pr_order=2)
+        self.assertEqual(pr.priority, 1.0)
+        response = self.client.post('/requests/', post_data, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        pr = models.PriorityOrder.objects.get(pr_order=0)
+        self.assertEqual(pr.priority, 1.0)
+        pr = models.PriorityOrder.objects.get(pr_order=1)
+        self.assertEqual(pr.priority, 0.8)
+        pr = models.PriorityOrder.objects.get(pr_order=2)
+        self.assertEqual(pr.priority, 0.6)
