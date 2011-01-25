@@ -451,24 +451,22 @@ class PriorityFeatureTest(TestCase):
             count() > 0)
 
         #Test ASC/DESC feature
-        post_data = {'addPriority': 0.6}
-        self.client.post('/requests/', post_data, **kwargs)
         post_data = {
             'sortPriority': 1,
         }
-        response = self.client.post('/requests/', post_data, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        response = self.client.get('/requests/', post_data)
+        self.assertEqual(response.status_code, 302)
         pr = models.PriorityOrder.objects.get(pr_order=0)
-        self.assertEqual(pr.priority, 0.6)
-        pr = models.PriorityOrder.objects.get(pr_order=1)
         self.assertEqual(pr.priority, 0.8)
-        pr = models.PriorityOrder.objects.get(pr_order=2)
+        pr = models.PriorityOrder.objects.get(pr_order=1)
         self.assertEqual(pr.priority, 1.0)
-        response = self.client.post('/requests/', post_data, **kwargs)
-        self.assertEqual(response.status_code, 200)
+        pr = models.PriorityOrder.objects.get(pr_order=2)
+        self.assertEqual(pr.priority, 2.0)
+        response = self.client.get('/requests/', post_data)
+        self.assertEqual(response.status_code, 302)
         pr = models.PriorityOrder.objects.get(pr_order=0)
-        self.assertEqual(pr.priority, 1.0)
+        self.assertEqual(pr.priority, 2.0)
         pr = models.PriorityOrder.objects.get(pr_order=1)
-        self.assertEqual(pr.priority, 0.8)
+        self.assertEqual(pr.priority, 1.0)
         pr = models.PriorityOrder.objects.get(pr_order=2)
-        self.assertEqual(pr.priority, 0.6)
+        self.assertEqual(pr.priority, 0.8)

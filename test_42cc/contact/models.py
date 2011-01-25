@@ -97,6 +97,22 @@ def deletePriority(post):
         i += 1
 
 
+def sortPriority():
+    if PriorityOrder.objects.count() < 2:
+        return
+    pr1 = PriorityOrder.objects.get(pr_order=0).priority
+    pr2 = PriorityOrder.objects.get(pr_order=1).priority
+    if pr1 < pr2:
+        lst = PriorityOrder.objects.order_by('-priority')
+    else:
+        lst = PriorityOrder.objects.order_by('priority')
+    i = 0
+    for obj in lst:
+        obj.pr_order = i
+        obj.save()
+        i += 1
+
+
 class PriorityOrder(models.Model):
     """Dictionary of priorities for HttpRequestLog model"""
     priority = models.FloatField(primary_key=True)

@@ -174,8 +174,8 @@ function sort_priority() {
             priority.disableSubmit(true);
         },
         success: function(json) {
-            jQuery('#id_sort_btn').attr('value', json.type);
-            priority.invalidateOrderList(json.order_list);
+//            jQuery('#id_sort_btn').attr('value', json.type);
+//            priority.invalidateOrderList(json.order_list);
             priority.msg.hide();
             priority.disableSubmit(false);
         },
