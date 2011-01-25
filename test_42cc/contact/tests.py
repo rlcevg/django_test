@@ -5,7 +5,7 @@ from contact.widgets import CalendarWidget
 from django import forms, template
 from datetime import date
 from django.test import Client
-from contact.forms import PersonForm
+from contact.forms import PersonForm, RequestForm
 from django.core import urlresolvers, management
 import sys
 from StringIO import StringIO
@@ -357,41 +357,95 @@ class ActionDBModelTest(TestCase):
 
 class PriorityFeatureTest(TestCase):
     def test_priority(self):
+        kwargs = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+
+        #Test basic feature
         post_data = {}
-        response = self.client.post('/requests/', post_data)
+        response = self.client.get('/requests/')
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(
-            models.PriorityStruct.PRIORITY_VAR in response.context
-        )
         p = models.HttpRequestLog.objects.get()
-        self.assertEqual(p.priority, 1)
+        self.assertEqual(p.priority, models.PriorityStruct.PRIORITY_DEFAULT)
 
+        #Test clear requests feature
         post_data = {
-            models.PriorityStruct.PRIORITY_VAR:
-                models.PriorityStruct.PRIORITY_HIGH,
+            'clear_btn': 1,
         }
         response = self.client.post('/requests/', post_data)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(models.HttpRequestLog.objects.count(), 2)
-        p = models.HttpRequestLog.objects.all()[1]
-        self.assertEqual(p.priority, models.PriorityStruct.PRIORITY_HIGH)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(models.HttpRequestLog.objects.count(), 0)
 
+        #Test add priority feature
         post_data = {
-            models.PriorityStruct.PRIORITY_VAR:
-                models.PriorityStruct.PRIORITY_MEDIUM,
+            'addPriority': 0.8,
         }
-        response = self.client.post('/requests/', post_data)
+        response = self.client.post('/requests/', post_data, **kwargs)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(models.HttpRequestLog.objects.count(), 3)
-        p = models.HttpRequestLog.objects.all()[2]
-        self.assertEqual(p.priority, models.PriorityStruct.PRIORITY_MEDIUM)
+        self.assertEqual(models.PriorityOrder.objects.count(), 2)
+        post_data['addPriority'] = 0.6
+        response = self.client.post('/requests/', post_data, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(models.PriorityOrder.objects.count(), 3)
 
+        #Test reorder priority feature
+        pr = models.PriorityOrder.objects.get(priority=1.0)
+        self.assertEqual(pr.pr_order, 0)
+        pr = models.PriorityOrder.objects.get(priority=0.8)
+        self.assertEqual(pr.pr_order, 1)
+        pr = models.PriorityOrder.objects.get(priority=0.6)
+        self.assertEqual(pr.pr_order, 2)
         post_data = {
-            models.PriorityStruct.PRIORITY_VAR:
-                models.PriorityStruct.PRIORITY_LOW,
+            'reorder': 1,
+            'listItem[]': [u'0.6', u'1.0', u'0.8'],
         }
-        response = self.client.post('/requests/', post_data)
+        response = self.client.post('/requests/', post_data, **kwargs)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(models.HttpRequestLog.objects.count(), 4)
-        p = models.HttpRequestLog.objects.all()[3]
-        self.assertEqual(p.priority, models.PriorityStruct.PRIORITY_LOW)
+        pr = models.PriorityOrder.objects.get(priority=1.0)
+        self.assertEqual(pr.pr_order, 1)
+        pr = models.PriorityOrder.objects.get(priority=0.8)
+        self.assertEqual(pr.pr_order, 2)
+        pr = models.PriorityOrder.objects.get(priority=0.6)
+        self.assertEqual(pr.pr_order, 0)
+
+        #Test change existing request's priority feature
+        req = models.HttpRequestLog.objects.all()[0]
+        post_data = {
+            'id': req.id,
+            'priority': 0.7,
+        }
+        response = self.client.post('/requests/', post_data, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        pr = models.PriorityOrder.objects.get(priority=0.7)
+        self.assertEqual(pr.pr_order, 3)
+        req = models.HttpRequestLog.objects.get(pk=req.id)
+        self.assertEqual(req.priority, 0.7)
+
+        #Test delete priority feature
+        post_data = {
+            'delPriority': 1,
+            'listItem[]': [u'0.6', u'0.7'],
+        }
+        response = self.client.post('/requests/', post_data, **kwargs)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(models.PriorityOrder.objects.count(), 2)
+        pr = models.PriorityOrder.objects.get(priority=1.0)
+        self.assertEqual(pr.pr_order, 0)
+        pr = models.PriorityOrder.objects.get(priority=0.8)
+        self.assertEqual(pr.pr_order, 1)
+
+        #Test clone template (filter) feature
+        self.assertEqual(models.HttpRequestLog.objects.filter(priority=2.0).\
+            count(), 0)
+        post_data = {
+            'clone': 1,
+            'host': u'testserver',
+            'full_path': u'/requests/',
+            'method': u'POST',
+            'is_ajax': True,
+            'is_secure': False,
+            'priority': 2.0,
+        }
+        response = self.client.post('/requests/', post_data, **kwargs)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(models.PriorityOrder.objects.count(), 3)
+        self.assertTrue(models.HttpRequestLog.objects.filter(priority=2.0).\
+            count() > 0)
