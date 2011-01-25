@@ -90,6 +90,8 @@
         <div style="text-align: center;">
             <input type="text" size=4 id="id_pr_add" value={{ priorityObj.PRIORITY_DEFAULT }}>
             <input type="button" name="addPriority" value="Add" onclick="add_priority()">
+            <br>
+            <input type="submit" id="id_sort_btn" name="sortPriority" value="ASC/DESC" >
         </div>
         <ul id="order_list" name="order_list">
         {% for item in order_list %}

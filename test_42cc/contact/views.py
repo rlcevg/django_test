@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.utils import simplejson
 from contact.models import HttpRequestLog, getOrderList, getOrderedList,\
-existedPriority, reorderPriority, deletePriority
+existedPriority, reorderPriority, deletePriority, sortPriority
 
 
 @login_required
@@ -102,6 +102,9 @@ def requests_view(request, template_name='contact/requests.html', priority=-1):
     response_dict = {}
 
     if request.method == "GET":
+        if 'sortPriority' in request.GET:
+            sortPriority()
+            return redirect('request_home')
         order_list = getOrderList()
         object_list = getOrderedList(order_list, 16)
         form = RequestForm()

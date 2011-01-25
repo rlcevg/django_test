@@ -11,22 +11,24 @@ var priority = {
         jQuery('input[type="button"]').attr('disabled', val);
         jQuery('input[type="text"]').attr('disabled', val);
     },
+    invalidateOrderList: function (order_list) {
+        if (typeof order_list == 'object') {
+            var list = jQuery('#order_list');
+            priority.createList(order_list, list);
+        }
+    },
+    createList: function(array, list) {
+        list.html('');
+        for (var i = 0; i < array.length; i++) {
+            var text = '<li id="listItem_' + array[i] + '"> ';
+            text += array[i] + '</li>';
+            list.append(text);
+        }
+        list.children().prepend(priority.img);
+    },
 };
 
 function postChanges(id) {
-    function invalidateOrderList(order_list) {
-        if (typeof order_list == 'object') {
-            var list = jQuery('#order_list');
-            list.html('');
-            for (var i = 0; i < order_list.length; i++) {
-                var text = '<li id="listItem_' + order_list[i] + '"> ';
-                text += order_list[i] + '</li>';
-                list.append(text);
-            }
-            list.children().prepend(priority.img);
-        }
-    }
-
     var disableSubmit = function(val) {
         priority.input.attr('disabled', val);
         priority.btn.attr('disabled', val);
@@ -65,7 +67,7 @@ function postChanges(id) {
                 priority.msg.html(text);
                 priority.tag.html(priority.old_val);
             } else {
-                invalidateOrderList(json.order_list);
+                priority.invalidateOrderList(json.order_list);
                 //jQuery('input:button[name=req_btn]').attr('disabled', false);
                 jQuery('input[type=button]').attr('disabled', false);
                 jQuery('input[type=submit]').attr('disabled', false);
@@ -165,6 +167,35 @@ function add_priority() {
     });
 }
 
+function sort_priority() {
+    function sortAsc(a, b) {
+        return a - b;
+    }
+    function sortDesc(a, b) {
+        return b - a;
+    }
+
+    var list = jQuery('#order_list');
+    var elems = list.children();
+    if (elems.length < 2)
+        return;
+
+    var a = [];
+    for (var i = 0; i < elems.length; i++) {
+        var matches = jQuery(elems[i]).attr('id').match('(.+)[_](.+)');
+        a[i] = +matches[2];
+    }
+    if ((a[0] < a[1])) {
+        a.sort(sortDesc);
+        jQuery('#id_sort_btn').attr('value', 'DESC');
+    } else {
+        a.sort(sortAsc);
+        jQuery('#id_sort_btn').attr('value', 'ASC');
+    }
+    priority.createList(a, list);
+    priority.msg.removeClass().addClass('success').html('Apply changes');
+}
+
 $(document).ready(function() {
     priority.msg = jQuery('#id_req_msg');
     priority.img = '<img src="/site_media/img/arrow.png" alt="move" width="16" height="16" class="handle" />';
@@ -178,4 +209,5 @@ $(document).ready(function() {
     priority.msg.ajaxSend(function() {
         priority.msg.removeClass().addClass('loading').html('Waiting for response...').fadeIn();
     });
+    jQuery('#id_sort_btn').replaceWith('<input type="button" id="id_sort_btn" value="ASC/DESC" onclick="sort_priority()">');
 });
