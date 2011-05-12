@@ -110,3 +110,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'contact.context_processor.add_settings',
 )
+
+# Trying to load settings located in ``settings_local.py`` file
+try:
+    from settings_local import *
+except ImportError, e:
+    logging.exception(e)
+    pass
