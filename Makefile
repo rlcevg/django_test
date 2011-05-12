@@ -6,7 +6,7 @@ PORT?=8000
 
 MANAGE=python test_42cc/manage.py
 
-test: clean nosetests
+test: copysettings clean nosetests
 
 nosetests:
 	$(MANAGE) test $(APP)
@@ -14,6 +14,9 @@ nosetests:
 clean:
 	-find . -name '*.pyc' -exec rm -f {} \;
 	-find . -name *~* -exec rm -f {} \;
+
+copysettings:
+	cp -f test_42cc/settings_local.py.buildbot test_42cc/settings_local.py
 
 run:
 	$(MANAGE) runserver $(IP):$(PORT)
