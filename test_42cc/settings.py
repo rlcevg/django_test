@@ -110,5 +110,3 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'contact.context_processor.add_settings',
 )
-
-SOUTH_TESTS_MIGRATE = False
