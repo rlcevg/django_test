@@ -1,5 +1,6 @@
 # Django settings for test_42cc project.
 import os
+import logging
 
 CURRENT_PATH = os.path.abspath(os.path.dirname(__file__).decode('utf-8')).\
         replace('\\', '/')
