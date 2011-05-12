@@ -101,9 +101,14 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'south',
+    'test_42cc.southtut',
+    'test_42cc.southtut2',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'contact.context_processor.add_settings',
 )
+
+SOUTH_TESTS_MIGRATE = False
