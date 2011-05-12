@@ -3,7 +3,7 @@ export DJANGO_SETTINGS_MODULE?=test_42cc.settings
 
 IP?=127.0.0.1
 PORT?=8000
-APP?=contact
+APP?=southtut2
 
 MANAGE=python test_42cc/manage.py
 
