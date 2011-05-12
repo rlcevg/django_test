@@ -10,11 +10,11 @@ MANAGE=python test_42cc/manage.py
 test: clean nosetests
 
 nosetests:
-    $(MANAGE) test $(APP)
+	$(MANAGE) test $(APP)
 
 clean:
-    -find . -name '*.pyc' -exec rm -f {} \;
-    -find . -name *~* -exec rm -f {} \;
+	-find . -name '*.pyc' -exec rm -f {} \;
+	-find . -name *~* -exec rm -f {} \;
 
 run:
-    $(MANAGE) runserver $(IP):$(PORT)
+	$(MANAGE) runserver $(IP):$(PORT)
