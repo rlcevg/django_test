@@ -5,6 +5,7 @@ IP?=127.0.0.1
 PORT?=8000
 
 MANAGE=python test_42cc/manage.py
+APP=contact
 
 test: copysettings clean nosetests
 
